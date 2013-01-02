@@ -1,5 +1,6 @@
 from django.contrib import admin
-from myCloset.models import cloth
+from myCloset.models import *
 
-admin.site.register(cloth)
+admin.site.register(Apparel)
+admin.site.register(Cloth)
 

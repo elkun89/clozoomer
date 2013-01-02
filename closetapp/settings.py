@@ -116,7 +116,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'django.contrib.admin',
-    'myCloset'
+    'myCloset',
+    'south'
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -151,6 +152,6 @@ LOGGING = {
 }
 
 # Parse database configuration from $DATABASE_URL
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()              # Or path to database file if using sqlite3.
+#import dj_database_url
+#DATABASES['default'] =  dj_database_url.config()              # Or path to database file if using sqlite3.
 
