@@ -19,7 +19,6 @@ urlpatterns = patterns('',
     
     url(r'^$', views.landing, name = 'landing'),
     url(r'^accounts/register', views.register, name = 'register'),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
     {'template_name': 'login.html'}),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
