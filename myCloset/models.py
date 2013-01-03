@@ -19,6 +19,7 @@ class Apparel(models.Model):
 
 class Cloth(Apparel):
     season = models.CharField(max_length = 50)
+    season1 = models.CharField(max_length = 50)
     
 class Shoes(Apparel):
     pass
