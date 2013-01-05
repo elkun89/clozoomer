@@ -3,7 +3,9 @@ from django.contrib import admin
 from django.contrib.auth.models import User, Permission
 
 class Brand(models.Model):
-    name = models.CharField(primary_key = True, max_length = 100)   
+    name = models.CharField(max_length = 100)
+    def __unicode__(self):
+        return self.name  
 
 class Apparel(models.Model):
     barcode = models.CharField(max_length = 100)
@@ -39,6 +41,8 @@ class Category(models.Model):
 class UserProfile(models.Model):
     user = models.ForeignKey(User)
     profielPictureLink = models.CharField(max_length = 200)
+    def __unicode__(self):
+        return self.user.username
     
 
     

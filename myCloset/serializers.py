@@ -4,7 +4,6 @@ from myCloset.models import *
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
-        fields = ('name')
         
 class ApparelSerializer(serializers.ModelSerializer):
     class Meta:

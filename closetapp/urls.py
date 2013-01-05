@@ -3,6 +3,7 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from myCloset import views
+import myCloset
 
 admin.autodiscover()
 
@@ -16,9 +17,9 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    
     url(r'^$', views.landing, name = 'landing'),
-    url(r'^brandlist', views.brandList, name = 'brandList'),
+    url(r'^', include('myCloset.urls')),
+    url(r'^rest/', include('myCloset.rest')),
     url(r'^accounts/register', views.register, name = 'register'),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
     {'template_name': 'login.html'}),

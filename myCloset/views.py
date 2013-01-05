@@ -5,38 +5,21 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
+from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import generics
+from rest_framework import status
 from myCloset.models import *
 from myCloset.serializers import *
 
-class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders it's content into JSON.
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
+class BrandList(generics.ListCreateAPIView):
+    model = Brand
+    serializer_class = BrandSerializer
 
-@csrf_exempt
-def brandList(request):
-    """
-    List all code snippets, or create a new snippet.
-    """
-    if request.method == 'GET':
-        brands = Brand.objects.all()
-        serializer = BrandSerializer(brands)
-        return JSONResponse(serializer.data)
-
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = BrandSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JSONResponse(serializer.data, status=201)
-        else:
-            return JSONResponse(serializer.errors, status=400)
+class BrandDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = Brand
+    serializer_class = BrandSerializer
 
 @login_required
 def landing(request):

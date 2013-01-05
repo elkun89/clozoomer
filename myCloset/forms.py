@@ -11,6 +11,7 @@ class UserForm(forms.Form):
     newPassword = forms.CharField(label="Password", widget=forms.PasswordInput)
     newPasswordConfirm = forms.CharField(label="Password Confirmation", widget=forms.PasswordInput,
                                 help_text = "Enter the same password as above, for verification.")
+    
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
         usernameData = cleaned_data.get('username')

@@ -1,4 +1,5 @@
 # Django settings for closetapp project.
+import os
 from os import path
 
 DEBUG = True
@@ -103,11 +104,12 @@ ROOT_URLCONF = 'closetapp.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'closetapp.wsgi.application'
 
+PROJECT_DIR = os.path.dirname(__file__) # this is not Django setting.
+
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    path.abspath('myCloset/templates').replace('\\','/')
+    os.path.join(PROJECT_DIR, "myCloset/templates"),
+    os.path.join(PROJECT_DIR, "../venv/Lib/site-packages/rest_framework/templates/"),
+    # here you can add another templates directory if you wish.
 )
 
 INSTALLED_APPS = (
@@ -119,7 +121,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 	'django.contrib.admin',
     'myCloset',
-    'south'
+    'south', 
+    'rest_framework'
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -154,6 +157,6 @@ LOGGING = {
 }
 
 # Parse database configuration from $DATABASE_URL
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()              # Or path to database file if using sqlite3.
+#import dj_database_url
+#DATABASES['default'] =  dj_database_url.config()              # Or path to database file if using sqlite3.
 

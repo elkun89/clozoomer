@@ -10,7 +10,8 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding model 'Brand'
         db.create_table('myCloset_brand', (
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal('myCloset', ['Brand'])
 
@@ -30,6 +31,8 @@ class Migration(SchemaMigration):
         # Adding model 'Cloth'
         db.create_table('myCloset_cloth', (
             ('apparel_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['myCloset.Apparel'], unique=True, primary_key=True)),
+            ('season', self.gf('django.db.models.fields.CharField')(max_length=50)),
+            ('season1', self.gf('django.db.models.fields.CharField')(max_length=50)),
         ))
         db.send_create_signal('myCloset', ['Cloth'])
 
@@ -128,7 +131,8 @@ class Migration(SchemaMigration):
         },
         'myCloset.brand': {
             'Meta': {'object_name': 'Brand'},
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'myCloset.category': {
             'Meta': {'object_name': 'Category'},
@@ -140,7 +144,9 @@ class Migration(SchemaMigration):
         },
         'myCloset.cloth': {
             'Meta': {'object_name': 'Cloth', '_ormbases': ['myCloset.Apparel']},
-            'apparel_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['myCloset.Apparel']", 'unique': 'True', 'primary_key': 'True'})
+            'apparel_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['myCloset.Apparel']", 'unique': 'True', 'primary_key': 'True'}),
+            'season': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'season1': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
         'myCloset.shoes': {
             'Meta': {'object_name': 'Shoes', '_ormbases': ['myCloset.Apparel']},
