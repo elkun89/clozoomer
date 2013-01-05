@@ -12,6 +12,9 @@ class BrandList(generics.ListCreateAPIView):
 class ApparelList(generics.ListCreateAPIView):
     model = Apparel
     serializer_class = ApparelSerializer
+    
+    def pre_save(self, obj):
+        obj.owner = self.request.user
 
 class ClothList(generics.ListCreateAPIView):
     model = Cloth
@@ -29,6 +32,7 @@ class UserProfileList(generics.ListCreateAPIView):
     model = UserProfile
     serializer_class = UserProfileSerializer
 
+
 class BrandDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Brand
     serializer_class = BrandSerializer
@@ -36,6 +40,9 @@ class BrandDetail(generics.RetrieveUpdateDestroyAPIView):
 class ApparelDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Apparel
     serializer_class = ApparelSerializer
+    
+    def pre_save(self, obj):
+        obj.owner = self.request.user
     
 class ClothDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Cloth
@@ -52,3 +59,11 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     model = UserProfile
     serializer_class = UserProfileSerializer
+    
+class UserList(generics.ListAPIView):
+    model = User
+    serializer_class = UserSerializer
+
+class UserInstance(generics.RetrieveAPIView):
+    model = User
+    serializer_class = UserSerializer

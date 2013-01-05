@@ -26,3 +26,8 @@ urlpatterns = patterns('',
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
     {'template_name': 'logged_off.html'}),
 )
+
+urlpatterns += patterns('',
+    url(r'^api-auth/', include('rest_framework.urls',
+                               namespace='rest_framework'))
+)

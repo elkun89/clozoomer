@@ -15,6 +15,7 @@ class Apparel(models.Model):
     pictureLink = models.CharField(max_length = 200)
     locationOfPurchase = models.CharField(max_length = 200)
     brand = models.ForeignKey(Brand)
+    owner = models.ForeignKey(User, related_name='apparels')
     def __unicode__(self):
         return self.name+'('+self.author.username+')'
     

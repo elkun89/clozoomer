@@ -6,6 +6,8 @@ class BrandSerializer(serializers.ModelSerializer):
         model = Brand
         
 class ApparelSerializer(serializers.ModelSerializer):
+    owner = serializers.Field(source='owner.username')
+    
     class Meta:
         model = Apparel
         
@@ -24,3 +26,9 @@ class CategorySerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
+
+class UserSerializer(serializers.ModelSerializer):
+    apparels = serializers.ManyPrimaryKeyRelatedField()
+    
+    class Meta:
+        model = User
