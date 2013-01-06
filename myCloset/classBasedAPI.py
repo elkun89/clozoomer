@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import status
+from rest_framework import permissions
 from myCloset.models import *
 from myCloset.serializers import *
 
@@ -12,6 +13,7 @@ class BrandList(generics.ListCreateAPIView):
 class ApparelList(generics.ListCreateAPIView):
     model = Apparel
     serializer_class = ApparelSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
     def pre_save(self, obj):
         obj.owner = self.request.user
@@ -27,6 +29,7 @@ class ShoesList(generics.ListCreateAPIView):
 class CategoryList(generics.ListCreateAPIView):
     model = Category
     serializer_class = CategorySerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class UserProfileList(generics.ListCreateAPIView):
     model = UserProfile
@@ -40,6 +43,7 @@ class BrandDetail(generics.RetrieveUpdateDestroyAPIView):
 class ApparelDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Apparel
     serializer_class = ApparelSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
     def pre_save(self, obj):
         obj.owner = self.request.user
@@ -55,6 +59,7 @@ class ShoesDetail(generics.RetrieveUpdateDestroyAPIView):
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Category
     serializer_class = CategorySerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     model = UserProfile

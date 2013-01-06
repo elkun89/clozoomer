@@ -16,13 +16,13 @@ class Apparel(models.Model):
     locationOfPurchase = models.CharField(max_length = 200)
     brand = models.ForeignKey(Brand)
     owner = models.ForeignKey(User, related_name='apparels')
+    categories = models.ManyToManyField('Category', blank = True)
     def __unicode__(self):
         return self.name+'('+self.author.username+')'
     
 
 class Cloth(Apparel):
-    season = models.CharField(max_length = 50)
-    season1 = models.CharField(max_length = 50)
+    pass
     
 class Shoes(Apparel):
     pass
