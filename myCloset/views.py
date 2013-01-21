@@ -1,29 +1,102 @@
 # Create your views here
 from django.contrib.auth.models import User, Permission
 from myCloset.forms import *
+from myCloset.models import *
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.template import Context, loader
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import generics
-from rest_framework import status
-from myCloset.models import *
-from myCloset.serializers import *
+from django.core import serializers
+from django.utils import simplejson
+import json
 
-class BrandList(generics.ListCreateAPIView):
-    model = Brand
-    serializer_class = BrandSerializer
-
-class BrandDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = Brand
-    serializer_class = BrandSerializer
+def json_response(func):
+    
+    """
+    
+    @json_response
+    
+    A decorator thats takes a view response and turns it into json. If a callback is added
+    through GET or POST the response is JSONP.
+    
+    Example usage:
+    
+    from django_decorators.decorators import json_response
+    @json_response
+    def any_view(request):
+        return {'this will be': 'JSON'}
+    
+    Returns a JSON string.
+    
+    Now, if you need a JSONP response, just add a callback GET or POST variable. :)
+    
+    ---
+    
+    https://github.com/julian-amaya/django-decorators
+    https://gist.github.com/871954
+    https://gist.github.com/1568174
+    
+    """
+    
+    def decorator(request, *args, **kwargs):
+        objects = func(request, *args, **kwargs)
+        callback = request.GET.get('callback', '')
+        if isinstance(objects, HttpResponse):
+            return objects
+        # Even after using `functools.wraps`, I get:
+        # Error: "'dict' object has no attribute 'status_code'".
+#         if objects.status_code != 200:
+#             return objects
+        # It just seems like a good idea to check for a 200 status code... Oh well. :(
+        try:
+            data = simplejson.dumps(objects)
+            if callback:
+                # A jsonp response!
+                data = callback + '(' + data + ');'
+                return HttpResponse(data, 'text/javascript; charset=utf-8')
+        except:
+            data = simplejson.dumps(str(objects))
+        return HttpResponse(data, 'application/json; charset=utf-8')
+    return decorator
 
 @login_required
 def landing(request):
-    return HttpResponse('the landing page')
+    return render(request, 'index.html')
+
+def viewExample(request, categoryID, exampleID):
+    template = loader.get_template('index.html')
+    
+    usrCategories = Category.objects.filter(author = request.user);
+    usrApparel = Apparel.objects.filter(owner = request.user)
+    
+    context = Context({                                                 # Map the examples in HTML to the examples variable
+                                                                        'usrCategories' : usrCategories,
+                                                                        'usrApparel' : usrApparel,
+                                                                        #'dependencies':dependencies,
+    })
+    return HttpResponse(template.render(context))
+
+@json_response
+def listApparelByJson(request):
+    if request.is_ajax:
+        #callback = request.GET.get('callback', '')
+        userApparel = Apparel.objects.filter(owner = request.user)
+        data = serializers.serialize('json', userApparel.all())
+        #data = callback + '(' + data + ');'
+        response = data;
+    else:
+        response = 'fail'
+    return HttpResponse(response, content_type='application/json')
+
+def randomTest(request):
+    callback = request.GET.get('callback', '')
+    req = {}
+    req ['title'] = 'This is a constant result.'
+    response = json.dumps(req)
+    response = callback + '(' + response + ');'
+    return HttpResponse(response, mimetype="application/json")
 
 def register(request):
     newUser = User(is_staff = False, is_superuser = False)

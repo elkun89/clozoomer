@@ -22,6 +22,8 @@ DATABASES = {
     }
 }
 
+PROJECT_DIR = os.path.dirname(__file__) # this is not Django setting.
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -69,6 +71,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_DIR, "../static"),  
 )
 
 # List of finder classes that know how to find static files in
@@ -104,10 +107,10 @@ ROOT_URLCONF = 'closetapp.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'closetapp.wsgi.application'
 
-PROJECT_DIR = os.path.dirname(__file__) # this is not Django setting.
+
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_DIR, "myCloset/templates"),
+    os.path.join(PROJECT_DIR, "../templates"),
     os.path.join(PROJECT_DIR, "../venv/Lib/site-packages/rest_framework/templates/"),
     # here you can add another templates directory if you wish.
 )
@@ -157,6 +160,6 @@ LOGGING = {
 }
 
 # Parse database configuration from $DATABASE_URL
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()              # Or path to database file if using sqlite3.
+#import dj_database_url
+#DATABASES['default'] =  dj_database_url.config()              # Or path to database file if using sqlite3.
 

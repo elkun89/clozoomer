@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>Closet App Test</title>
+<script src="jquery.js"></script>
+<script src="highlight.js"></script>
+<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+
+<script>
+function send_request(){
+	$.ajax({
+	type: "GET",
+	dataType: 'jsonp',
+	jsonp: 'jsonp_callback',
+	url: 'http://localhost:8000/apparel/',
+	success: function(){
+		alert('success');
+	},
+	error: function(){
+		alert('failure');
+	}
+	});
+}
+</script>
+
+</head>
+<body>
+<div id="main">
+	<table border="0" id="main" width="100%" cellpadding="10">
+	<tr>
+	<td width="25%"  valign="top" >
+		<div id="sidebar">
+			<form id="search" method="get" action="index.html">
+				<input id="search_box" type="text" name="q"/>
+	        	<input id="search_box_submit" type="submit" class="button blue" value="Search"/>
+		   	</form>
+		</div>
+	</td>
+	
+	<input type="button" onclick="send_request();" value="Request this page with AJAX" /><br/>
+
+	<td width="75%" valign="top">
+		<div id="content">
+			<div id="top"/>
+		</div>
+	</td>
+	
+	</tr>
+	</table>
+</div>
+</body>
+</html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>Closet App Test</title>
+<script src="jquery.js"></script>
+<script src="highlight.js"></script>
+<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+
+</head>
+<body>
+<div id="main">
+	<table border="0" id="main" width="100%" cellpadding="10">
+	<tr>
+	<td width="25%"  valign="top" >
+		<div id="sidebar">
+			<form id="search" method="get" action="index.html">
+				<input id="search_box" type="text" name="q"/>
+	        	<input id="search_box_submit" type="submit" class="button blue" value="Search"/>
+		   	</form>
+		</div>
+	</td>
+	
+	<input type="button" onclick="send_request();" value="Request this page with AJAX" /><br/>
+
+	<td width="75%" valign="top">
+		<div id="content">
+			<div id="top"/>
+		</div>
+	</td>
+	
+	</tr>
+	</table>
+</div>
+</body>
+</html>
