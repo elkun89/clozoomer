@@ -1,89 +1,171 @@
+<!DOCTYPE html>
+
 <html>
+{% load staticfiles %}
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="style.css" />
-<title>Closet App Test</title>
-<script src="jquery.js"></script>
-<script src="highlight.js"></script>
-<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" media="screen"/>
+<script src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/highlight.js" %}"></script>
+</head>
 
 <script>
-function send_request(){
-	$.ajax({
-	type: "GET",
-	dataType: 'jsonp',
-	jsonp: 'jsonp_callback',
-	url: 'http://localhost:8000/apparel/',
-	success: function(){
-		alert('success');
-	},
-	error: function(){
-		alert('failure');
-	}
+$(document).ready(function(){
+
+	// $(#html).click(function(){
+	// 	alert("Value: " + $("#test").html());
+	// });	
+
+	$("#showHtml").click(function(){
+    	alert("Text: " + $("#test").html());
+  	});
+
+	$("#clear").click(function(){
+		var clear = '';
+		$("#apparel").html(clear);
+		$("#categories").html(clear);
+		$("#profile").html(clear);
 	});
-}
+	// $("button").click(function(){
+ //    	alert("Value: " + $("#test").val());
+ //  	});
+
+
+// function request() {
+// 	$.getJSON('http://130.215.126.187:8000/rest/brands/?format=json', function(data) {
+// 		var item = '';
+
+// 		window.alert('hello');
+
+// 		for(i = 0; i < data.length; i++){
+// 			if(jQuery.inArray(data[i].id, itemIDs) == -1 && data[i].title != null){
+// 				item = '<a target="_blank" href="'+ data[i].link +'"><div id="item"><p id="source">' + data[i].source + '</p><p id="title">' +data[i].title + '</p><p id="date">' + data[i].date + '</p></p><hr/></a>';
+// 				itemIDs.push(data[i].id);
+
+
+// 				$(item).insertAfter("#top").hide().fadeIn("slow");
+// 			}
+// 		}
+// 	});
+
+// 	if(query != 'new'){ $('p').highlight(query); }
+// }
+
+// function query_get(){    
+// 	var querystr = window.location.href.split("?q=");   
+// 	return querystr[1];   
+// }
+});
+
+function apparel_request(){
+	$.ajax({
+		type: 'GET',
+		url: 'http://localhost:8000/apparel',
+		contentType: "application/json",
+		success: function(data) {
+			var insert = "List of User's Apparel: <br>";
+			for (var i = 0; i < data.length; i++) {
+			    insert = insert + "Name: " + data[i].name + "<br>";
+			    insert = insert + "Price: " + data[i].price + "<br>";
+			    insert = insert + "Brand: " + data[i].brand + "<br>";
+			    insert = insert + "Picture Link: " + data[i].pictureLink + "<br>";
+			}
+			$("#apparel").html(insert);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+};
+
+function category_request(){
+	$.ajax({
+		type: 'GET',
+		url: 'http://localhost:8000/categories',
+		contentType: "application/json",
+		success: function(data) {
+			var insert = '';
+			for (var i = 0; i < data.length; i++) {
+			    insert = insert + data[i].name + "<br>";
+			}
+			$("#categories").html(insert);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+};
+
+function profile_request(){
+	$.ajax({
+		type: 'GET',
+		url: 'http://localhost:8000/userProfile',
+		contentType: "application/json",
+		success: function(data) {
+			var insert = 'Profile: <br>';
+			for (var i = 0; i < data.length; i++) {
+			    insert = insert + "Username: " + data[i].username + "<br>";
+			    insert = insert + "Email: " + data[i].email + "<br>";
+			}
+			$("#profile").html(insert);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+};
+
+
+// function request_html(){
+//  	alert("Value: " + $("p").html());
+// };
+
+function add_category(){
+		var form = '';
+		form = form + '<form id = "add_category" method = "POST" action = "addCategory">';
+};
 </script>
 
-</head>
 <body>
+
 <div id="main">
 	<table border="0" id="main" width="100%" cellpadding="10">
-	<tr>
-	<td width="25%"  valign="top" >
-		<div id="sidebar">
-			<form id="search" method="get" action="index.html">
-				<input id="search_box" type="text" name="q"/>
-	        	<input id="search_box_submit" type="submit" class="button blue" value="Search"/>
-		   	</form>
-		</div>
-	</td>
-	
-	<input type="button" onclick="send_request();" value="Request this page with AJAX" /><br/>
+		<tr>
+			<td width="25%"  valign="top" >
+				<div id="sidebar">
+					<form id="search" method="get" action="index.html">
+					<input id="search_box" type="text" name="q"/>
+					<input id="search_box_submit" type="submit" class="button blue" value="Search"/>
+					</form>
+				</div>
+			</td>
 
-	<td width="75%" valign="top">
-		<div id="content">
-			<div id="top"/>
-		</div>
-	</td>
-	
-	</tr>
+			<td width="75%" valign="top">
+				<div id="content">
+					<p> Welcome User: {{thisUser.username}} </p > <br>
+					<input type="button" onclick="apparel_request();" value="Request clothing AJAX" /><br><br>
+					<input type="button" onclick="category_request();" value="Request categories AJAX" /><br><br>
+					<input type="button" onclick="profile_request();" value="Request profile AJAX" /><br><br>
+					<input type="button" onclick="request_html();" value="Request some HTML code" /><br><br>
+					<!-- <button id="showHtml">Show Text</button> -->
+					<button id = "clear">Clear</button>
+
+					<div id = "apparel"></div>
+
+					<div id = "categories"></div>
+
+					<div id = "profile"></div>
+
+					<div id = "addCategory"></div>
+
+
+					<p id="test">This is some <b>bold</b> text in a paragraph.</p>	
+				</div>
+			</td>
+
+		</tr>
 	</table>
 </div>
-</body>
-</html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="style.css" />
-<title>Closet App Test</title>
-<script src="jquery.js"></script>
-<script src="highlight.js"></script>
-<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 
-</head>
-<body>
-<div id="main">
-	<table border="0" id="main" width="100%" cellpadding="10">
-	<tr>
-	<td width="25%"  valign="top" >
-		<div id="sidebar">
-			<form id="search" method="get" action="index.html">
-				<input id="search_box" type="text" name="q"/>
-	        	<input id="search_box_submit" type="submit" class="button blue" value="Search"/>
-		   	</form>
-		</div>
-	</td>
-	
-	<input type="button" onclick="send_request();" value="Request this page with AJAX" /><br/>
-
-	<td width="75%" valign="top">
-		<div id="content">
-			<div id="top"/>
-		</div>
-	</td>
-	
-	</tr>
-	</table>
-</div>
 </body>
 </html>
