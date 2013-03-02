@@ -6,30 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" media="screen"/>
 <script src="{% static "js/jquery.js" %}"></script>
+<!-- <script src="{% static "js/functions.js" %}" ></script> -->
 <script src="{% static "js/highlight.js" %}"></script>
 </head>
 
 <script>
-$(document).ready(function(){
-
-	// $(#html).click(function(){
-	// 	alert("Value: " + $("#test").html());
-	// });	
-
-	$("#showHtml").click(function(){
-    	alert("Text: " + $("#test").html());
-  	});
-
-	$("#clear").click(function(){
-		var clear = '';
-		$("#apparel").html(clear);
-		$("#categories").html(clear);
-		$("#profile").html(clear);
-	});
-	// $("button").click(function(){
- //    	alert("Value: " + $("#test").val());
- //  	});
-
 
 // function request() {
 // 	$.getJSON('http://130.215.126.187:8000/rest/brands/?format=json', function(data) {
@@ -55,25 +36,68 @@ $(document).ready(function(){
 // 	var querystr = window.location.href.split("?q=");   
 // 	return querystr[1];   
 // }
-});
+
+
+function getTypeData(id){	
+	var insert = "";
+	var apparelData;
+	$.ajax({
+		type: 'GET',
+		url: 'getApparelType/' + id + '/',
+		async : false,
+		contentType: "application/json",
+		success: function(data) {
+			apparelData = data;
+			// insert = insert + "Name: " + apparelName + "<br>";
+			// $("#apparelType").append(insert);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+	return apparelData;
+};
+
+function getLocationName(id){	
+	var insert = "";
+	var locationName;
+	$.ajax({
+		type: 'GET',
+		url: 'rest/locations/' + id + '/',
+		async : false,
+		contentType: "application/json",
+		success: function(data) {
+			locationName = data.address;
+		},
+		error: function(e) {
+		}
+	});
+	return locationName;
+};
 
 function apparel_request(){
 	$.ajax({
 		type: 'GET',
-		url: 'http://localhost:8000/apparel',
+		url: 'apparel',
 		contentType: "application/json",
 		success: function(data) {
+			var apparelName;
+			var locationName;
 			var insert = "List of User's Apparel: <br>";
 			for (var i = 0; i < data.length; i++) {
-			    insert = insert + "Name: " + data[i].name + "<br>";
-			    insert = insert + "Price: " + data[i].price + "<br>";
-			    insert = insert + "Brand: " + data[i].brand + "<br>";
-			    insert = insert + "Picture Link: " + data[i].pictureLink + "<br>";
+				apparelName = getTypeData(data[i].type).name;
+				locationName = getLocationName(data[i].locationOfPurchase);	
+				insert = insert + "Name: " + apparelName + "<br>";
+			    insert = insert + "Purchase Time: " + data[i].timeOfCreation + "<br>";
+			    insert = insert + "Location: " + locationName + "<br>";
+
+			    // $("#apparel").append($("apparelType"), $(apparelInstance));
+			    // $("#apparelType").clear;
+			    // $("#apparelInstance").clear;
 			}
 			$("#apparel").html(insert);
 		},
 		error: function(e) {
-			alert('error!');
 		}
 	});
 };
@@ -81,7 +105,7 @@ function apparel_request(){
 function category_request(){
 	$.ajax({
 		type: 'GET',
-		url: 'http://localhost:8000/categories',
+		url: 'categories',
 		contentType: "application/json",
 		success: function(data) {
 			var insert = '';
@@ -89,6 +113,24 @@ function category_request(){
 			    insert = insert + data[i].name + "<br>";
 			}
 			$("#categories").html(insert);
+		},
+		error: function(e) {
+		}
+	});
+};
+
+function friends_request(){
+	$.ajax({
+		type: 'GET',
+		url: 'getFriends',
+		contentType: "application/json",
+		success: function(data) {
+			var insert = 'Friends: <br>';
+			for (var i = 0; i < data.length; i++) {
+			    insert = insert + "Username: " + data[i].username + "<br>";
+			    insert = insert + "Email: " + data[i].email + "<br>";
+			}
+			$("#friends").html(insert);
 		},
 		error: function(e) {
 			alert('error!');
@@ -99,7 +141,7 @@ function category_request(){
 function profile_request(){
 	$.ajax({
 		type: 'GET',
-		url: 'http://localhost:8000/userProfile',
+		url: 'userProfile',
 		contentType: "application/json",
 		success: function(data) {
 			var insert = 'Profile: <br>';
@@ -110,25 +152,31 @@ function profile_request(){
 			$("#profile").html(insert);
 		},
 		error: function(e) {
-			alert('error!');
 		}
 	});
-};
+}
 
-
-// function request_html(){
-//  	alert("Value: " + $("p").html());
-// };
 
 function add_category(){
 		var form = '';
 		form = form + '<form id = "add_category" method = "POST" action = "addCategory">';
 };
+
+$(document).ready(function(){
+	profile_request(); 
+	$("#clear").click(function(){
+		var clear = '';
+		$("#apparel").html(clear);
+		$("#categories").html(clear);
+		$("#profile").html(clear);
+	});
+});
+
 </script>
 
 <body>
 
-<div id="main">
+<!-- <div id="main">
 	<table border="0" id="main" width="100%" cellpadding="10">
 		<tr>
 			<td width="25%"  valign="top" >
@@ -147,14 +195,9 @@ function add_category(){
 					<input type="button" onclick="category_request();" value="Request categories AJAX" /><br><br>
 					<input type="button" onclick="profile_request();" value="Request profile AJAX" /><br><br>
 					<input type="button" onclick="request_html();" value="Request some HTML code" /><br><br>
-					<!-- <button id="showHtml">Show Text</button> -->
 					<button id = "clear">Clear</button>
 
-					<div id = "apparel"></div>
-
 					<div id = "categories"></div>
-
-					<div id = "profile"></div>
 
 					<div id = "addCategory"></div>
 
@@ -165,6 +208,40 @@ function add_category(){
 
 		</tr>
 	</table>
+</div> -->
+
+<div class="tabs">
+    
+   <div class="tab">
+       <input type="radio" onclick="profile_request();" id="tab-1" name="tab-group-1" checked>
+       <label for="tab-1">Request profile AJAX</label>
+       
+       <div class="tabcontent">
+           <div id = "profile"></div>
+       </div> 
+   </div>
+    
+   <div class="tab">
+       <input type="radio" onclick="apparel_request();" id="tab-2" name="tab-group-1">
+       <label for="tab-2">Request clothing AJAX</label>
+       
+       <div class="tabcontent">
+           <div id = "apparel">
+				<div id = "apparelType"></div>
+				<div id = "apparelInstance"></div>
+			</div>
+       </div> 
+   </div>
+    
+    <div class="tab">
+       <input type="radio" onclick="friends_request();" id="tab-3" name="tab-group-1">
+       <label for="tab-3">Friends</label>
+     
+       <div class="tabcontent">
+           <div id = "friends"></div>
+       </div> 
+   </div>
+    
 </div>
 
 </body>

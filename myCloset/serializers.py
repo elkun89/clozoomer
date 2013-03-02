@@ -5,19 +5,17 @@ class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
         
-class ApparelSerializer(serializers.ModelSerializer):
-    owner = serializers.Field(source='owner.username')
-    
+class ApparelTypeSerializer(serializers.ModelSerializer): 
     class Meta:
-        model = Apparel
+        model = ApparelType
         
-class ClothSerializer(serializers.ModelSerializer):
+class ClothTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cloth
+        model = ClothType
         
-class ShoesSerializer(serializers.ModelSerializer):
+class ShoesTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Shoes
+        model = ShoesType
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,8 +25,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
 
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+
 class UserSerializer(serializers.ModelSerializer):
     apparels = serializers.ManyPrimaryKeyRelatedField()
     
     class Meta:
-        model = User
+        model = User    
+        
+class ApparelInstanceSerializer(serializers.ModelSerializer):
+    owner = serializers.Field(source='owner.username')
+    class Meta:
+        model = ApparelInstance

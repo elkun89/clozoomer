@@ -6,25 +6,32 @@ from rest_framework import permissions
 from myCloset.models import *
 from myCloset.serializers import *
 
+#===============================================================================
+# List block
+#===============================================================================
 class BrandList(generics.ListCreateAPIView):
     model = Brand
     serializer_class = BrandSerializer
     
-class ApparelList(generics.ListCreateAPIView):
-    model = Apparel
-    serializer_class = ApparelSerializer
+class ApparelTypeList(generics.ListCreateAPIView):
+    model = ApparelType
+    serializer_class = ApparelTypeSerializer
+        
+class ApparelInstanceList(generics.ListCreateAPIView):
+    model = ApparelInstance
+    serializer_class = ApparelInstanceSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
     def pre_save(self, obj):
         obj.owner = self.request.user
 
-class ClothList(generics.ListCreateAPIView):
-    model = Cloth
-    serializer_class = ClothSerializer
+class ClothTypeList(generics.ListCreateAPIView):
+    model = ClothType
+    serializer_class = ClothTypeSerializer
 
-class ShoesList(generics.ListCreateAPIView):
-    model = Shoes
-    serializer_class = ShoesSerializer
+class ShoesTypeList(generics.ListCreateAPIView):
+    model = ShoesType
+    serializer_class = ShoesTypeSerializer
 
 class CategoryList(generics.ListCreateAPIView):
     model = Category
@@ -34,27 +41,37 @@ class CategoryList(generics.ListCreateAPIView):
 class UserProfileList(generics.ListCreateAPIView):
     model = UserProfile
     serializer_class = UserProfileSerializer
+    
+class LocationList(generics.ListCreateAPIView):
+    model = Location
+    serializer_class = LocationSerializer
 
-
+#===============================================================================
+# Detail block
+#===============================================================================
 class BrandDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Brand
     serializer_class = BrandSerializer
 
-class ApparelDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = Apparel
-    serializer_class = ApparelSerializer
+class ApparelTypeDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = ApparelType
+    serializer_class = ApparelTypeSerializer
+        
+class ApparelInstanceDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = ApparelInstance
+    serializer_class = ApparelInstanceSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     
     def pre_save(self, obj):
         obj.owner = self.request.user
     
 class ClothDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = Cloth
-    serializer_class = ClothSerializer
+    model = ClothType
+    serializer_class = ClothTypeSerializer
     
 class ShoesDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = Shoes
-    serializer_class = ShoesSerializer
+    model = ShoesType
+    serializer_class = ShoesTypeSerializer
     
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Category
@@ -72,3 +89,7 @@ class UserList(generics.ListAPIView):
 class UserInstance(generics.RetrieveAPIView):
     model = User
     serializer_class = UserSerializer
+    
+class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = Location
+    serializer_class = LocationSerializer

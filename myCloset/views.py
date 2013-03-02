@@ -8,13 +8,29 @@ from django.shortcuts import render
 from django.template import Context, loader
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import Http404
-from django.core import serializers
-from django.utils import simplejson
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import json
+import sys
+import traceback
+
+#===============================================================================
+# function used to debug
+#===============================================================================
+def console_debug(f):
+    def x(*args, **kw):
+        try:
+            ret = f(*args, **kw)
+        except Exception, e:
+            print >> sys.stderr, "ERROR:", str(e)
+            exc_type, exc_value, tb = sys.exc_info()
+            message = "Type: %s\nValue: %s\nTraceback:\n\n%s" % (exc_type, exc_value, "\n".join(traceback.format_tb(tb)))
+            print >> sys.stderr, message
+            raise
+        else:
+            return ret
+    return x
 
 #===============================================================================
 # landing function for the index page
@@ -26,7 +42,7 @@ def landing(request):
     template = loader.get_template('index.html')
     
     usrCategories = Category.objects.filter(author=request.user);
-    usrApparel = Apparel.objects.filter(owner=request.user);
+    usrApparel = ApparelInstance.objects.filter(owner=request.user);
     thisUser = request.user;
     
     context = Context({  # Map the examples in HTML to the examples variable
@@ -43,12 +59,13 @@ def landing(request):
 # @return: json data of apparel information 
 #===============================================================================
 @login_required
+@console_debug
 @api_view(['GET'])
 def listApparelByJson(request):
     if request.method == 'GET':
-        usrApparel = Apparel.objects.filter(owner = request.user);
-        serializer = ApparelSerializer(usrApparel)
-        return Response(serializer.data)
+        usrApparel = ApparelInstance.objects.filter(owner = request.user)
+        instanceSerializer = ApparelInstanceSerializer(usrApparel)
+        return Response(instanceSerializer.data)
     
 #===============================================================================
 # function to list all user's categories by json
@@ -107,9 +124,48 @@ def register(request):
             password = form.cleaned_data['newPassword']
             newUser.set_password(password)  # set the password for the newUser
             newUser.save()
+            
+            #copy the information to profile
+            newProfile = UserProfile()
+            newProfile.username = newUser.username
+            newProfile.firstname = newUser.first_name
+            newProfile.lastname = newUser.last_name
+            newProfile.email = newUser.email
             return HttpResponseRedirect('/accounts/login')
     else:
         form = UserForm()
     return render(request, 'signUp.html', {
             'form': form
     })
+    
+#===============================================================================
+# function to get the type of the specified apparel
+# @param request: the http request sent by the user
+# @param idNum: the id of the apparel
+#===============================================================================
+@api_view(['GET'])
+def getApparelType(request, idNum):
+    if request.method == 'GET':
+        apparelType = ApparelType.objects.get(id = idNum)
+        serializer = ApparelTypeSerializer(apparelType)
+        return Response(serializer.data)
+
+#===============================================================================
+# function to get the friends of a certain user
+# @param request: the http request sent by the user
+#===============================================================================
+@api_view(['GET'])
+def getFriends(request):
+    uprofile = UserProfile.objects.get(user = request.user)
+    ufriends = UserProfile.objects.filter(id__in = uprofile.friends.all())
+    serializer = UserProfileSerializer(ufriends)
+    return Response(serializer.data)
+
+
+
+
+
+
+
+
+

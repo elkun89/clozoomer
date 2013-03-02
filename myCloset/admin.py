@@ -1,8 +1,9 @@
 from django.contrib import admin
 from myCloset.models import *
 
-admin.site.register(Apparel)
-admin.site.register(Cloth)
+admin.site.register(ApparelType)
+admin.site.register(ClothType)
+admin.site.register(UserProfile)
 admin.site.register(Brand)
 
 
