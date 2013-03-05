@@ -72,7 +72,7 @@ class UserProfile(models.Model):
     lastname = models.CharField(max_length = 100, blank = True)
     email = models.EmailField(max_length = 200, blank = True)
     friends = models.ManyToManyField('UserProfile', blank = True)
-    profielPictureLink = models.CharField(max_length = 200)
+    profilePictureLink = models.ImageField(upload_to = 'users')
     def __unicode__(self):
         return self.user.username
 

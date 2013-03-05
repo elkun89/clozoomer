@@ -1,0 +1,67 @@
+<!-- <div id="main">
+	<table border="0" id="main" width="100%" cellpadding="10">
+		<tr>
+			<td width="25%"  valign="top" >
+				<div id="sidebar">
+					<form id="search" method="get" action="index.html">
+					<input id="search_box" type="text" name="q"/>
+					<input id="search_box_submit" type="submit" class="button blue" value="Search"/>
+					</form>
+				</div>
+			</td>
+
+			<td width="75%" valign="top">
+				<div id="content">
+					<p> Welcome User: {{thisUser.username}} </p > <br>
+					<input type="button" onclick="apparel_request();" value="Request clothing AJAX" /><br><br>
+					<input type="button" onclick="category_request();" value="Request categories AJAX" /><br><br>
+					<input type="button" onclick="profile_request();" value="Request profile AJAX" /><br><br>
+					<input type="button" onclick="request_html();" value="Request some HTML code" /><br><br>
+					<button id = "clear">Clear</button>
+
+					<div id = "categories"></div>
+
+					<div id = "addCategory"></div>
+
+
+					<p id="test">This is some <b>bold</b> text in a paragraph.</p>	
+				</div>
+			</td>
+
+		</tr>
+	</table>
+</div> -->
+
+<!-- <div class="tabs">
+    
+   <div class="tab">
+       <input type="radio" onclick="profile_request();" id="tab-1" name="tab-group-1" checked>
+       <label for="tab-1">Request profile AJAX</label>
+       
+       <div class="tabcontent">
+           <div id = "profile"></div>
+       </div> 
+   </div>
+    
+   <div class="tab">
+       <input type="radio" onclick="apparel_request();" id="tab-2" name="tab-group-1">
+       <label for="tab-2">Request clothing AJAX</label>
+       
+       <div class="tabcontent">
+           <div id = "apparel">
+				<div id = "apparelType"></div>
+				<div id = "apparelInstance"></div>
+			</div>
+       </div> 
+   </div>
+    
+    <div class="tab">
+       <input type="radio" onclick="friends_request();" id="tab-3" name="tab-group-1">
+       <label for="tab-3">Friends</label>
+     
+       <div class="tabcontent">
+           <div id = "friends"></div>
+       </div> 
+   </div>
+    
+</div> -->

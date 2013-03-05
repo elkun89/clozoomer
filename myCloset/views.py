@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User, Permission
 from myCloset.forms import *
 from myCloset.models import *
-from myCloset.serializers import *
+from myCloset.restapi.serializers import *
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import Context, loader
@@ -43,13 +43,18 @@ def landing(request):
     
     usrCategories = Category.objects.filter(author=request.user);
     usrApparel = ApparelInstance.objects.filter(owner=request.user);
+    apparelType = ApparelType.objects.all();
+    apparelLocation = Location.objects.all();
     thisUser = request.user;
+    thisProfile = UserProfile.objects.get(user = request.user);
     
     context = Context({  # Map the examples in HTML to the examples variable
                                                                         'usrCategories' : usrCategories,
                                                                         'usrApparel' : usrApparel,
+                                                                        'apparelType' : apparelType,
+                                                                        'apparelLocation' : apparelLocation,
                                                                         'thisUser' : thisUser,
-                                                                        # 'dependencies':dependencies,
+                                                                        'thisProfile' : thisProfile,
     })
     return HttpResponse(template.render(context))
 
@@ -149,6 +154,30 @@ def getApparelType(request, idNum):
         apparelType = ApparelType.objects.get(id = idNum)
         serializer = ApparelTypeSerializer(apparelType)
         return Response(serializer.data)
+    
+#===============================================================================
+# function to get apparel without using json
+# @param request: the http request sent by the user
+# @param idNum: the id of the apparel
+#===============================================================================
+@login_required
+def listApparel(request):
+    template = loader.get_template('index.html')
+    
+    usrCategories = Category.objects.filter(author=request.user);
+    usrApparel = ApparelInstance.objects.filter(owner=request.user);
+    apparelType = ApparelType.objects.all();
+    apparelLocation = Location.objects.all();
+    thisUser = request.user;
+    
+    context = Context({  # Map the examples in HTML to the examples variable
+                                                                        'usrCategories' : usrCategories,
+                                                                        'usrApparel' : usrApparel,
+                                                                        'apparelType' : apparelType,
+                                                                        'apparelLocation' : apparelLocation,
+                                                                        'thisUser' : thisUser,
+    })
+    return HttpResponse(template.render(context))
 
 #===============================================================================
 # function to get the friends of a certain user
@@ -159,6 +188,16 @@ def getFriends(request):
     uprofile = UserProfile.objects.get(user = request.user)
     ufriends = UserProfile.objects.filter(id__in = uprofile.friends.all())
     serializer = UserProfileSerializer(ufriends)
+    return Response(serializer.data)
+
+#===============================================================================
+# function to get the friends of a certain user
+# @param request: the http request sent by the user
+#===============================================================================
+@api_view(['GET'])
+def getProfile(request):
+    uprofile = UserProfile.objects.get(user = request.user)
+    serializer = UserProfileSerializer(uprofile)
     return Response(serializer.data)
 
 

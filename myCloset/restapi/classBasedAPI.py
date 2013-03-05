@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework import permissions
 from myCloset.models import *
-from myCloset.serializers import *
+from myCloset.restapi.serializers import *
 
 #===============================================================================
 # List block

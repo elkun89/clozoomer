@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 
-<html>
+<!-- <html>
 {% load staticfiles %}
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" media="screen"/>
 <script src="{% static "js/jquery.js" %}"></script>
-<!-- <script src="{% static "js/functions.js" %}" ></script> -->
+<script src="{% static "js/functions.js" %}" ></script>
 <script src="{% static "js/highlight.js" %}"></script>
-</head>
+</head> -->
+
+<html lang="en">
+{% load staticfiles %}
+	<head>
+		<title>Clozoom</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="{% static "css/theme.css" %}" type="text/css" media="screen"/>
+		<script src="{% static "js/jquery.js" %}"></script>
+		<!-- <script src="{% static "js/functions.js" %}" ></script> -->
+		<script src="{% static "js/highlight.js" %}"></script>
+		<!-- Author: Kun Peng -->
+	</head>
 
 <script>
 
@@ -37,6 +49,11 @@
 // 	return querystr[1];   
 // }
 
+
+function show_livefeed(){
+	var insert = '<div class = "newsfeed"><p>Your friend just bought a shoe at Nike:</p><img src = "{% static "images/feed1.jpg" %}" HEIGHT="138" WIDTH="220" BORDER="1"></div><div class = "newsfeed"><p>Your friend just bought a skirt:</p><img src = "{% static "images/feed2.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1"></div><div class = "newsfeed"><p>Your friend just posted 2 new pictures with the clothes that she purchased at XXX on 06/15/2012 via facebook:</p><img src = "{% static "images/feed3.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1"><img src = "{% static "images/feed3a.jpg" %}"><img src = "{% static "images/feed3b.jpg" %}"><img src = "{% static "images/feed3c.jpg" %}"></div>';
+	$("#main_board").html(insert);
+}
 
 function getTypeData(id){	
 	var insert = "";
@@ -76,6 +93,8 @@ function getLocationName(id){
 };
 
 function apparel_request(){
+	var clear = '';
+	$("#main_board").html(clear);
 	$.ajax({
 		type: 'GET',
 		url: 'apparel',
@@ -95,7 +114,7 @@ function apparel_request(){
 			    // $("#apparelType").clear;
 			    // $("#apparelInstance").clear;
 			}
-			$("#apparel").html(insert);
+			$("#main_board").html(insert);
 		},
 		error: function(e) {
 		}
@@ -120,6 +139,8 @@ function category_request(){
 };
 
 function friends_request(){
+	var clear = '';
+	$("#main_board").html(clear);
 	$.ajax({
 		type: 'GET',
 		url: 'getFriends',
@@ -127,10 +148,10 @@ function friends_request(){
 		success: function(data) {
 			var insert = 'Friends: <br>';
 			for (var i = 0; i < data.length; i++) {
-			    insert = insert + "Username: " + data[i].username + "<br>";
+			    insert = insert + "Name: " + data[i].firstname + " " + data[i].lastname + "<br>";
 			    insert = insert + "Email: " + data[i].email + "<br>";
 			}
-			$("#friends").html(insert);
+			$("#main_board").html(insert);
 		},
 		error: function(e) {
 			alert('error!');
@@ -156,93 +177,91 @@ function profile_request(){
 	});
 }
 
+function apparel_nojson_request(){
+	var clear = '';
+	$("#main_board").html(clear);
+	var insert = '{% for a in usrApparel %}Name : {{a.type.name}} <br>Time Added to Closet: {{a.timeOfCreation}} <br>Location of Purchase : {{a.locationOfPurchase.address}}<br><br>{% endfor %}';
+	$("#main_board").html(insert);
+}
 
-function add_category(){
-		var form = '';
-		form = form + '<form id = "add_category" method = "POST" action = "addCategory">';
-};
+function show_profilepic(){
+	var clear = '';
+	$("#profilepic_photo").html(clear);
+
+	$.ajax({
+		type: 'GET',
+		url: 'getFriends',
+		contentType: "application/json",
+		success: function(data) {
+			alert(data[0].email);
+			var insert = '';
+			insert = insert + '<img src = "../static/images/';
+			insert = insert + data[0].profilePictureLink;
+			insert = insert + '" HEIGHT="200" WIDTH="138" BORDER="1">';
+			$("#profilepic_photo").html(insert);
+		},
+		error: function(e) {
+			alert(e);
+		}
+	});
+
+}
 
 $(document).ready(function(){
-	profile_request(); 
-	$("#clear").click(function(){
-		var clear = '';
-		$("#apparel").html(clear);
-		$("#categories").html(clear);
-		$("#profile").html(clear);
-	});
+	show_livefeed();
+	//show_profilepic();
+	//profile_request(); 
+	// $("#clear").click(function(){
+	// 	var clear = '';
+	// 	$("#apparel").html(clear);
+	// 	$("#categories").html(clear);
+	// 	$("#profile").html(clear);
+	// });
 });
 
 </script>
 
-<body>
-
-<!-- <div id="main">
-	<table border="0" id="main" width="100%" cellpadding="10">
-		<tr>
-			<td width="25%"  valign="top" >
-				<div id="sidebar">
-					<form id="search" method="get" action="index.html">
-					<input id="search_box" type="text" name="q"/>
-					<input id="search_box_submit" type="submit" class="button blue" value="Search"/>
-					</form>
+	<body>
+		<div id = "leftpart">
+			<section id="profilepic_section">
+				<div id = 'profilepic_photo'>
+					<img src = "{% static "images/profilepic.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1">
 				</div>
-			</td>
-
-			<td width="75%" valign="top">
-				<div id="content">
-					<p> Welcome User: {{thisUser.username}} </p > <br>
-					<input type="button" onclick="apparel_request();" value="Request clothing AJAX" /><br><br>
-					<input type="button" onclick="category_request();" value="Request categories AJAX" /><br><br>
-					<input type="button" onclick="profile_request();" value="Request profile AJAX" /><br><br>
-					<input type="button" onclick="request_html();" value="Request some HTML code" /><br><br>
-					<button id = "clear">Clear</button>
-
-					<div id = "categories"></div>
-
-					<div id = "addCategory"></div>
-
-
-					<p id="test">This is some <b>bold</b> text in a paragraph.</p>	
+				<p>{{thisUser.first_name}} {{thisUser.last_name}}</p>
+				<p>Edit Profile</p>
+			</section>
+		
+			<section id="sidebar">
+				<h4>Current Trends</h4>
+				<p> XXX </p>
+				<p> XXX </p>
+				<p> XXX </p>
+				<br />
+				<br />
+				<br />
+				<h4>Followed Trends</h4>
+				<p> XXX </p>
+				<p> XXX </p>
+				<p> XXX </p>
+			</section>
+		</div>
+		
+		<div id = "rightpart">
+			<section id="main_content">
+				<div>
+					<menu id = "thumbnails">
+                                            <ul>
+						<li><input class = "button" type="button" onclick="show_livefeed();" value="Stream" /></li>
+						<li><input class = "button" type="button" onclick="apparel_nojson_request();" value="Closet" /></li>
+						<li><input class = "button" type="button" onclick="friends_request();" value="Followers" /></li>
+                                            </ul>
 				</div>
-			</td>
-
-		</tr>
-	</table>
-</div> -->
-
-<div class="tabs">
-    
-   <div class="tab">
-       <input type="radio" onclick="profile_request();" id="tab-1" name="tab-group-1" checked>
-       <label for="tab-1">Request profile AJAX</label>
-       
-       <div class="tabcontent">
-           <div id = "profile"></div>
-       </div> 
-   </div>
-    
-   <div class="tab">
-       <input type="radio" onclick="apparel_request();" id="tab-2" name="tab-group-1">
-       <label for="tab-2">Request clothing AJAX</label>
-       
-       <div class="tabcontent">
-           <div id = "apparel">
-				<div id = "apparelType"></div>
-				<div id = "apparelInstance"></div>
-			</div>
-       </div> 
-   </div>
-    
-    <div class="tab">
-       <input type="radio" onclick="friends_request();" id="tab-3" name="tab-group-1">
-       <label for="tab-3">Friends</label>
-     
-       <div class="tabcontent">
-           <div id = "friends"></div>
-       </div> 
-   </div>
-    
-</div>
-
-</body>
+				<div id = "main_board" >
+				</div>
+				<div id = "test_board" >
+				</div>
+			</section>
+		</div>
+	</body>
 </html>
+

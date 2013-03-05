@@ -8,5 +8,6 @@ urlpatterns = patterns('',
     url(r'^userProfile/$', views.requestUserProfile, name  = 'requestUserProfile'),
     url(r'^randomTest/$', views.randomTest, name  = 'randomTest'),
     url(r'^getFriends/$', views.getFriends, name  = 'randomTest'),
+    url(r'^getProfile/$', views.getProfile, name  = 'getProfile'),
 )
 

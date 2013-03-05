@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		{% load staticfiles %}
+		<title> You Have Logged Out</title>
+		<link rel="stylesheet" href="{% static "css/login-logout-structure.css" %}" type="text/css" media="screen"/>
+		<link rel="stylesheet" href="{% static "css/reset.css" %}" type="text/css" media="screen"/>
+		<link rel="stylesheet" href="{% static "css/master.css" %}" type="text/css" media="screen"/>
+		<link rel="shortcut icon" href="{% static "img/favicon.png" %}">
+	</head>
+
+	<body>
+
+		<!-- Logo -->
+		<div id="topContainer">
+			<div class="centerContainer">
+				<!-- Logo -->
+				<div id="logo">
+					<ul>
+						<li>
+							<a href="/accounts/login" title="Programmer's Example Notebook" class="logo fl image">
+								<img src="{% static "img/pen-logo-base.png" %}" alt="PEN Logo"/>
+								<img src="{% static "img/pen-logo-hover.png" %}" alt="PEN Logo"/></a>
+						</li>
+					</ul>
+				</div>
+			</div> <!-- end centerContainer -->
+		</div> <!-- end topContainer -->
+
+
+		<form id="login_form" method="post" class="box login">
+
+			 <fieldset class="boxBody">
+
+				<p class="logoutMsg" style="font-size:20px;" align="center"><b>You have logged out.</b></p>
+
+			</fieldset>
+			<footer>
+			  	<a href="{% url django.contrib.auth.views.login %}">Log in again?</a>
+			</footer>
+
+		</form>
+
+	</body>
+</html>
+
