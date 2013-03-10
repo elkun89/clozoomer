@@ -1,0 +1,18 @@
+{% extends "base_form.html" %}
+{% block form %}
+<!-- Main Page Body, in a new section tag -->
+<section>
+
+	<div class="formWrapper">
+	<div class="fontModification">
+		<!-- Note's Title and Information Box -->
+		<form action="." method="post" class="generalText">{% csrf_token %}
+			{{ form.as_p }}
+			<input type="submit" value="Submit" />
+		</form>
+		</div>
+	</div>
+
+</section>
+<!-- End of main page body -->
+{% endblock %}
