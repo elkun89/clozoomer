@@ -60,7 +60,7 @@ function getTypeData(id){
 	var apparelData;
 	$.ajax({
 		type: 'GET',
-		url: 'getApparelType/' + id + '/',
+		url: '/getApparelType/' + id + '/',
 		async : false,
 		contentType: "application/json",
 		success: function(data) {
@@ -97,7 +97,7 @@ function apparel_request(){
 	$("#main_board").html(clear);
 	$.ajax({
 		type: 'GET',
-		url: 'apparel',
+		url: '/apparel',
 		contentType: "application/json",
 		success: function(data) {
 			var apparelName;
@@ -124,7 +124,7 @@ function apparel_request(){
 function category_request(){
 	$.ajax({
 		type: 'GET',
-		url: 'categories',
+		url: '/categories',
 		contentType: "application/json",
 		success: function(data) {
 			var insert = '';
@@ -143,12 +143,12 @@ function friends_request(){
 	$("#main_board").html(clear);
 	$.ajax({
 		type: 'GET',
-		url: 'getFriends',
+		url: '/getFriends',
 		contentType: "application/json",
 		success: function(data) {
 			var insert = 'Friends: <br>';
 			for (var i = 0; i < data.length; i++) {
-			    insert = insert + "Name: " + data[i].firstname + " " + data[i].lastname + "<br>";
+			    insert = insert + "Name: " + data[i].first_name + " " + data[i].last_name + "<br>";
 			    insert = insert + "Email: " + data[i].email + "<br>";
 			}
 			$("#main_board").html(insert);
@@ -162,7 +162,7 @@ function friends_request(){
 function profile_request(){
 	$.ajax({
 		type: 'GET',
-		url: 'userProfile',
+		url: '/userProfile',
 		contentType: "application/json",
 		success: function(data) {
 			var insert = 'Profile: <br>';
@@ -226,6 +226,7 @@ $(document).ready(function(){
 			<section id="profilepic_section">
 				<div id = 'profilepic_photo'>
 					<img src = "{% static "images/profilepic.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1">
+					<!-- <img src = {{thisProfile.profilePictureLink}}> -->
 				</div>
 				<p>{{thisUser.first_name}} {{thisUser.last_name}}</p>
 				<p>Edit Profile</p>
@@ -254,6 +255,8 @@ $(document).ready(function(){
 						<li><input class = "button" type="button" onclick="show_livefeed();" value="Stream" /></li>
 						<li><input class = "button" type="button" onclick="apparel_nojson_request();" value="Closet" /></li>
 						<li><input class = "button" type="button" onclick="friends_request();" value="Followers" /></li>
+						<li><a class = "button" href="/editProfile">Edit Profile</a></li>
+						<li><a class = "button" href="/accounts/logout/">Log Out</a></li>
                                             </ul>
 				</div>
 				<div id = "main_board" >

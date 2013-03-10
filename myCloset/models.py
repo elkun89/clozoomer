@@ -68,11 +68,16 @@ class Category(models.Model):
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique = True)
     username = models.CharField(max_length = 200)
-    firstname = models.CharField(max_length = 100, blank = True)
-    lastname = models.CharField(max_length = 100, blank = True)
+    first_name = models.CharField(max_length = 100, blank = True)
+    last_name = models.CharField(max_length = 100, blank = True)
     email = models.EmailField(max_length = 200, blank = True)
+    GENDER = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
+    gender = models.CharField(max_length = 2, choices = GENDER)
     friends = models.ManyToManyField('UserProfile', blank = True)
-    profilePictureLink = models.ImageField(upload_to = 'users')
+    profilePictureLink = models.ImageField(upload_to = 'users', blank = True)
     def __unicode__(self):
         return self.user.username
 

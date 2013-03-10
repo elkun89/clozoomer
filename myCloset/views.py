@@ -132,10 +132,13 @@ def register(request):
             
             #copy the information to profile
             newProfile = UserProfile()
+            newProfile.user = newUser
             newProfile.username = newUser.username
-            newProfile.firstname = newUser.first_name
-            newProfile.lastname = newUser.last_name
+            newProfile.first_name = newUser.first_name
+            newProfile.last_name = newUser.last_name
             newProfile.email = newUser.email
+            newProfile.gender = form.cleaned_data['gender']
+            newProfile.save()
             return HttpResponseRedirect('/accounts/login')
     else:
         form = UserForm()
@@ -200,7 +203,25 @@ def getProfile(request):
     serializer = UserProfileSerializer(uprofile)
     return Response(serializer.data)
 
-
+@login_required
+def editProfile(request):
+    oldProfile = UserProfile.objects.get(user = request.user)
+    if request.method == 'POST':                                    #process the information if the request is post
+        form = ProfileForm(request.user, request.POST)
+        if form.is_valid():
+            oldProfile.first_name = form.cleaned_data['first_name']
+            oldProfile.last_name = form.cleaned_data['last_name']
+            oldProfile.email = form.cleaned_data['email']
+            oldProfile.gender = form.cleaned_data['gender']
+            oldProfile.friends = form.cleaned_data['friends']
+            oldProfile.profilePictureLink = form.cleaned_data['profilePictureLink']
+            oldProfile.save()
+            return HttpResponseRedirect('/')
+    else:
+        form = ProfileForm(request.user, instance = oldProfile, initial = {})
+    return render(request, 'formTemplate.html', {
+            'form': form
+    })
 
 
 

@@ -1,13 +1,20 @@
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
+from myCloset.models import UserProfile
 from django.db.models import Q
 
 class UserForm(forms.Form):
+    
     username = forms.CharField(max_length = 50)
     first_name = forms.CharField(label="First Name",max_length = 20)
     last_name = forms.CharField(label="Last Name", max_length = 20)
     email = forms.EmailField()
+    GENDER = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
+    gender = forms.ChoiceField(choices = GENDER, widget = forms.RadioSelect())
     newPassword = forms.CharField(label="Password", widget=forms.PasswordInput)
     newPasswordConfirm = forms.CharField(label="Password Confirmation", widget=forms.PasswordInput,
                                 help_text = "Enter the same password as above, for verification.")
@@ -23,3 +30,29 @@ class UserForm(forms.Form):
             raise forms.ValidationError("You have unmatching passwords!")
         
         return cleaned_data
+    
+class ProfileForm(ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('first_name', 'last_name', 'email', 'gender','friends', 'profilePictureLink')
+        
+    #adding overridden initialization field, restrict categories to the ones with the user as the author    
+    def __init__(self, user, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
