@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class Brand(models.Model):
     name = models.CharField(max_length = 100)
     def __unicode__(self):
-        return self.name  
+        return u"%s" % (self.name)  
 
 #===============================================================================
 # ApparelType
@@ -79,7 +79,7 @@ class UserProfile(models.Model):
     friends = models.ManyToManyField('UserProfile', blank = True)
     profilePictureLink = models.ImageField(upload_to = 'users', blank = True)
     def __unicode__(self):
-        return self.user.username
+        return u"%s" % (self.user.username)
 
 
 #===============================================================================
@@ -88,6 +88,6 @@ class UserProfile(models.Model):
 class Location(models.Model):
     address = models.CharField(max_length = 500);
     def __unicode__(self):
-        return self.address;
+        return u"%s" % (self.address);
 
     

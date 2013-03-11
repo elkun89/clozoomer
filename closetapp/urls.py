@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+import settings
 from myCloset import views
 import myCloset
 
@@ -26,6 +27,11 @@ urlpatterns = patterns('',
     {'template_name': 'login.html'}),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
     {'template_name': 'logged_off.html'}),
+)
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes':True}),
 )
 
 urlpatterns += patterns('',
