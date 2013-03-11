@@ -18,7 +18,7 @@ class Migration(SchemaMigration):
         # Adding model 'ApparelType'
         db.create_table('myCloset_appareltype', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('barcode', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('barcode', self.gf('django.db.models.fields.CharField')(unique=True, max_length=100)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('price', self.gf('django.db.models.fields.FloatField')()),
             ('attribute', self.gf('django.db.models.fields.CharField')(max_length=50)),
@@ -70,10 +70,23 @@ class Migration(SchemaMigration):
         # Adding model 'UserProfile'
         db.create_table('myCloset_userprofile', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('profielPictureLink', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], unique=True)),
+            ('username', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('first_name', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('last_name', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
+            ('email', self.gf('django.db.models.fields.EmailField')(max_length=200, blank=True)),
+            ('gender', self.gf('django.db.models.fields.CharField')(max_length=2)),
+            ('profilePictureLink', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
         ))
         db.send_create_signal('myCloset', ['UserProfile'])
+
+        # Adding M2M table for field friends on 'UserProfile'
+        db.create_table('myCloset_userprofile_friends', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('from_userprofile', models.ForeignKey(orm['myCloset.userprofile'], null=False)),
+            ('to_userprofile', models.ForeignKey(orm['myCloset.userprofile'], null=False))
+        ))
+        db.create_unique('myCloset_userprofile_friends', ['from_userprofile_id', 'to_userprofile_id'])
 
         # Adding model 'Location'
         db.create_table('myCloset_location', (
@@ -107,6 +120,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'UserProfile'
         db.delete_table('myCloset_userprofile')
+
+        # Removing M2M table for field friends on 'UserProfile'
+        db.delete_table('myCloset_userprofile_friends')
 
         # Deleting model 'Location'
         db.delete_table('myCloset_location')
@@ -161,7 +177,7 @@ class Migration(SchemaMigration):
         'myCloset.appareltype': {
             'Meta': {'object_name': 'ApparelType'},
             'attribute': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'barcode': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'barcode': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
             'brand': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['myCloset.Brand']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
@@ -196,9 +212,15 @@ class Migration(SchemaMigration):
         },
         'myCloset.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '200', 'blank': 'True'}),
+            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'friends': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['myCloset.UserProfile']", 'symmetrical': 'False', 'blank': 'True'}),
+            'gender': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'profielPictureLink': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'profilePictureLink': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'unique': 'True'}),
+            'username': ('django.db.models.fields.CharField', [], {'max_length': '200'})
         }
     }
 
