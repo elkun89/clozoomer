@@ -207,7 +207,7 @@ def getProfile(request):
 def editProfile(request):
     oldProfile = UserProfile.objects.get(user = request.user)
     if request.method == 'POST':                                    #process the information if the request is post
-        form = ProfileForm(request.user, request.POST)
+        form = ProfileForm(request.user, request.POST, request.FILES)
         if form.is_valid():
             newProfile = form.save(commit = False)
             newProfile.user = request.user
