@@ -209,13 +209,11 @@ def editProfile(request):
     if request.method == 'POST':                                    #process the information if the request is post
         form = ProfileForm(request.user, request.POST)
         if form.is_valid():
-            oldProfile.first_name = form.cleaned_data['first_name']
-            oldProfile.last_name = form.cleaned_data['last_name']
-            oldProfile.email = form.cleaned_data['email']
-            oldProfile.gender = form.cleaned_data['gender']
-            oldProfile.friends = form.cleaned_data['friends']
-            oldProfile.profilePictureLink = form.cleaned_data['profilePictureLink']
-            oldProfile.save()
+            newProfile = form.save(commit = False)
+            newProfile.user = request.user
+            newProfile.username = request.user.username
+            oldProfile.delete()
+            newProfile.save()
             return HttpResponseRedirect('/')
     else:
         form = ProfileForm(request.user, instance = oldProfile, initial = {})

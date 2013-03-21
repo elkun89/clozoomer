@@ -225,8 +225,8 @@ $(document).ready(function(){
 		<div id = "leftpart">
 			<section id="profilepic_section">
 				<div id = 'profilepic_photo'>
-					<!-- <img src = "{% static "images/profilepic.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1"> -->
-					<img src = {{MEDIA_URL}}{{thisProfile.profilePictureLink}}>
+					<img src = "{{thisProfile.profilePictureLink.url}}" HEIGHT="200" WIDTH="138" BORDER="1">
+					<!-- <img src = "{{thisProfile.profilePictureLink}}"> -->
 				</div>
 				<p>{{thisUser.first_name}} {{thisUser.last_name}}</p>
 				<p>Edit Profile</p>
