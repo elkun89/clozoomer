@@ -138,6 +138,7 @@ def register(request):
             newProfile.last_name = newUser.last_name
             newProfile.email = newUser.email
             newProfile.gender = form.cleaned_data['gender']
+            newProfile.profilePictureLink = "users/ak.png"
             newProfile.save()
             return HttpResponseRedirect('/accounts/login')
     else:
