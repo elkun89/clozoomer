@@ -51,9 +51,26 @@
 
 
 function show_livefeed(){
-	var insert = '<div class = "newsfeed"><p>Your friend just bought a shoe at Nike:</p><img src = "{% static "images/feed1.jpg" %}" HEIGHT="138" WIDTH="220" BORDER="1"></div><div class = "newsfeed"><p>Your friend just bought a skirt:</p><img src = "{% static "images/feed2.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1"></div><div class = "newsfeed"><p>Your friend just posted 2 new pictures with the clothes that she purchased at XXX on 06/15/2012 via facebook:</p><img src = "{% static "images/feed3.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1"><img src = "{% static "images/feed3a.jpg" %}"><img src = "{% static "images/feed3b.jpg" %}"><img src = "{% static "images/feed3c.jpg" %}"></div>';
-	$("#main_board").html(insert);
-}
+//	var insert = '<div class = "newsfeed"><p>Your friend just bought a shoe at Nike:</p><img src = "{% static "images/feed1.jpg" %}" HEIGHT="138" WIDTH="220" BORDER="1"></div><div class = "newsfeed"><p>Your friend just bought a skirt:</p><img src = "{% static "images/feed2.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1"></div><div class = "newsfeed"><p>Your friend just posted 2 new pictures with the clothes that she purchased at XXX on 06/15/2012 via facebook:</p><img src = "{% static "images/feed3.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1"><img src = "{% static "images/feed3a.jpg" %}"><img src = "{% static "images/feed3b.jpg" %}"><img src = "{% static "images/feed3c.jpg" %}"></div>';
+//	$("#main_board").html(insert);
+		$.ajax({
+		type: 'GET',
+		url: '/getPosts',
+		contentType: "application/json",
+		success: function(data) {
+			var insert = 'Posts: <br>';
+			for (var i = 0; i < data.length; i++) {
+			    insert = insert + data[i].author + ": " + 
+				"<img src = 'media/" + data[i].mainPicture + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + 
+				"<img src = 'media/" + data[i].userPictures + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + "<br>";
+			}
+			$("#main_board").html(insert);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+};
 
 function getTypeData(id){	
 	var insert = "";
@@ -229,7 +246,7 @@ $(document).ready(function(){
 					<!-- <img src = "{{thisProfile.profilePictureLink}}"> -->
 				</div>
 				<p>{{thisUser.first_name}} {{thisUser.last_name}}</p>
-				<p>Edit Profile</p>
+				<p><a class = "button" href="/editProfile">Edit Profile</a></p>
 			</section>
 		
 			<section id="sidebar">
@@ -255,7 +272,7 @@ $(document).ready(function(){
 						<li><input class = "button" type="button" onclick="show_livefeed();" value="Stream" /></li>
 						<li><input class = "button" type="button" onclick="apparel_nojson_request();" value="Closet" /></li>
 						<li><input class = "button" type="button" onclick="friends_request();" value="Followers" /></li>
-						<li><a class = "button" href="/editProfile">Edit Profile</a></li>
+						<li><a class = "button" href="/newPost">New Post</a></li>
 						<li><a class = "button" href="/accounts/logout/">Log Out</a></li>
                                             </ul>
 				</div>

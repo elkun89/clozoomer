@@ -78,6 +78,7 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length = 2, choices = GENDER)
     friends = models.ManyToManyField('UserProfile', blank = True)
     profilePictureLink = models.ImageField(upload_to = 'users', blank = True)
+    posts = models.ManyToManyField('Post', blank = True)
     def __unicode__(self):
         return u"%s" % (self.user.username)
 
@@ -90,4 +91,15 @@ class Location(models.Model):
     def __unicode__(self):
         return u"%s" % (self.address);
 
+
+#===============================================================================
+# Posts
+#===============================================================================
+class Post(models.Model):
+    author = models.ForeignKey(User, unique = True)
+    content = models.CharField(max_length = 500)
+    mainPicture = models.ImageField(upload_to = 'users', blank = True)
+    userPictures = models.ImageField(upload_to = 'users', blank = True)
+    def __unicode__ (self):
+        return self.content+'('+self.author.username+')'
     

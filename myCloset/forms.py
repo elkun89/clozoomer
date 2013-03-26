@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django import forms
 from myCloset.models import UserProfile
 from django.db.models import Q
+from myCloset.models import Post
 
 class UserForm(forms.Form):
     
@@ -39,8 +40,23 @@ class ProfileForm(ModelForm):
     #adding overridden initialization field, restrict categories to the ones with the user as the author    
     def __init__(self, user, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)      
+
+
+
+# form used for adding a new post        
+class PostForm(ModelForm):
+    class Meta:
+        model = Post
+        fields = ('content', 'mainPicture', 'userPictures')
         
+    #adding overridden initialization field, restrict categories to the ones with the user as the author    
+    def __init__(self, user, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+
         
+    #content = forms.CharField(max_length = 500)
+    #mainPicture = forms.ImageField(upload_to = 'users', blank = True)
+    #userPictures = forms.ImageField(upload_to = 'users' blank = True)
         
         
         

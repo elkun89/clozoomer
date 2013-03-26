@@ -47,6 +47,8 @@ def landing(request):
     apparelLocation = Location.objects.all();
     thisUser = request.user;
     thisProfile = UserProfile.objects.get(user = request.user);
+
+    showPosts(request);
     
     context = Context({  # Map the examples in HTML to the examples variable
                                                                         'usrCategories' : usrCategories,
@@ -55,6 +57,7 @@ def landing(request):
                                                                         'apparelLocation' : apparelLocation,
                                                                         'thisUser' : thisUser,
                                                                         'thisProfile' : thisProfile,
+                                                                        #'allPosts' : userPosts
     })
     return HttpResponse(template.render(context))
 
@@ -173,7 +176,6 @@ def listApparel(request):
     apparelType = ApparelType.objects.all();
     apparelLocation = Location.objects.all();
     thisUser = request.user;
-    
     context = Context({  # Map the examples in HTML to the examples variable
                                                                         'usrCategories' : usrCategories,
                                                                         'usrApparel' : usrApparel,
@@ -192,6 +194,8 @@ def getFriends(request):
     uprofile = UserProfile.objects.get(user = request.user)
     ufriends = UserProfile.objects.filter(id__in = uprofile.friends.all())
     serializer = UserProfileSerializer(ufriends)
+    #assert False, serializer.data
+    
     return Response(serializer.data)
 
 #===============================================================================
@@ -223,8 +227,46 @@ def editProfile(request):
     })
 
 
+#===============================================================================
+# function to display posts to friends
+# @param request: the http request sent by the user
+#===============================================================================
+@api_view(['GET'])
+def showPosts(request):
+    uprofile = UserProfile.objects.get(user = request.user)
+    ufriends = UserProfile.objects.filter(id__in = uprofile.friends.all())
+    
+    userPosts = list()
+    
+    for user in ufriends:
+        posts = Post.objects.filter(author = user)
+        for post in posts:
+            userPosts.append(post);
+            #assert False
+            
+        serializer = PostSerializer(userPosts);
+        
+    return Response(serializer.data)
 
 
-
+#===============================================================================
+# function to display posts to friends
+# @param request: the http request sent by the user
+#===============================================================================
+@login_required
+def createPost(request):
+    #oldPost = Post.objects.get(author = request.user)
+    #if request.method == 'POST':                                    #process the information if the request is post
+        form = PostForm(request.user, request.POST, request.FILES)
+        if form.is_valid():
+            newPost = form.save(commit = False)
+            newPost.author = request.user
+            newPost.save()
+            return HttpResponseRedirect('/')
+    #else:
+    #    form = PostForm(request.user, instance = oldPost, initial = {})
+        return render(request, 'formTemplate.html', {
+            'form': form
+    })
 
 

@@ -125,7 +125,8 @@ INSTALLED_APPS = (
 	'django.contrib.admin',
     'myCloset',
     #'south', 
-    'rest_framework'
+    'rest_framework',
+    'django_extensions'
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

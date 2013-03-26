@@ -30,8 +30,7 @@ class LocationSerializer(serializers.ModelSerializer):
         model = Location
 
 class UserSerializer(serializers.ModelSerializer):
-    apparels = serializers.ManyPrimaryKeyRelatedField()
-    
+    apparels = serializers.ManyPrimaryKeyRelatedField()    
     class Meta:
         model = User    
         
@@ -39,3 +38,7 @@ class ApparelInstanceSerializer(serializers.ModelSerializer):
     owner = serializers.Field(source='owner.username')
     class Meta:
         model = ApparelInstance
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
