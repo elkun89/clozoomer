@@ -243,8 +243,12 @@ def showPosts(request):
         for post in posts:
             userPosts.append(post);
             #assert False
+   
+    posts = Post.objects.filter(author = request.user)
+    for post in posts:
+        userPosts.append(post);
             
-        serializer = PostSerializer(userPosts);
+    serializer = PostSerializer(userPosts)
         
     return Response(serializer.data)
 
