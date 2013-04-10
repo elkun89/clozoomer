@@ -247,7 +247,6 @@ def showPosts(request):
                 userPosts.append(post);
                 serializer = PostSerializer(userPosts);
             return Response(serializer.data);
-        
 
 #===============================================================================
 # function to create posts

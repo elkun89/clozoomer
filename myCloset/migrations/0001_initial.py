@@ -88,6 +88,14 @@ class Migration(SchemaMigration):
         ))
         db.create_unique('myCloset_userprofile_friends', ['from_userprofile_id', 'to_userprofile_id'])
 
+        # Adding M2M table for field posts on 'UserProfile'
+        db.create_table('myCloset_userprofile_posts', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('userprofile', models.ForeignKey(orm['myCloset.userprofile'], null=False)),
+            ('post', models.ForeignKey(orm['myCloset.post'], null=False))
+        ))
+        db.create_unique('myCloset_userprofile_posts', ['userprofile_id', 'post_id'])
+
         # Adding model 'Location'
         db.create_table('myCloset_location', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -98,21 +106,12 @@ class Migration(SchemaMigration):
         # Adding model 'Post'
         db.create_table('myCloset_post', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('author', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], (primary_key=True)),
+            ('author', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], unique=True)),
             ('content', self.gf('django.db.models.fields.CharField')(max_length=500)),
             ('mainPicture', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
             ('userPictures', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
-        )
-        db.send_create_signal('myCloset', ['Post'])
-
-
-        # Adding M2M table for field posts on 'UserProfile'
-        db.create_table('myCloset_userprofile_posts', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('from_userprofile', models.ForeignKey(orm['myCloset.userprofile'], null=False)),
-            ('to_post', models.ForeignKey(orm['myCloset.post'], null=False))
         ))
-        db.create_unique('myCloset_userprofile_posts', ['from_userprofile_id', 'to_post_id'])
+        db.send_create_signal('myCloset', ['Post'])
 
 
     def backwards(self, orm):
@@ -143,14 +142,14 @@ class Migration(SchemaMigration):
         # Removing M2M table for field friends on 'UserProfile'
         db.delete_table('myCloset_userprofile_friends')
 
+        # Removing M2M table for field posts on 'UserProfile'
+        db.delete_table('myCloset_userprofile_posts')
+
         # Deleting model 'Location'
         db.delete_table('myCloset_location')
 
         # Deleting model 'Post'
         db.delete_table('myCloset_post')
-
-        # Removing M2M table for field posts on 'UserProfile'
-        db.delete_table('myCloset_userprofile_posts')
 
 
     models = {
@@ -231,6 +230,14 @@ class Migration(SchemaMigration):
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
+        'myCloset.post': {
+            'Meta': {'object_name': 'Post'},
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'unique': 'True'}),
+            'content': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'mainPicture': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
+            'userPictures': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'})
+        },
         'myCloset.shoestype': {
             'Meta': {'object_name': 'ShoesType', '_ormbases': ['myCloset.ApparelType']},
             'appareltype_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['myCloset.ApparelType']", 'unique': 'True', 'primary_key': 'True'})
@@ -243,18 +250,10 @@ class Migration(SchemaMigration):
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'posts': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['myCloset.Post']", 'symmetrical': 'False', 'blank': 'True'}),
             'profilePictureLink': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'unique': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'posts': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['myCloset.Post']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        'myCloset.post': {
-            'Meta': {'object_name': 'Post'},
-            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'unique': 'True'}),
-            'content': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'mainPicture': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
-            'userPictures': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'})
+            'username': ('django.db.models.fields.CharField', [], {'max_length': '200'})
         }
     }
 
