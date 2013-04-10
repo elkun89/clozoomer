@@ -61,8 +61,8 @@ function show_livefeed(){
 			var insert = 'Posts: <br>';
 			for (var i = 0; i < data.length; i++) {
 			    insert = insert + data[i].author + ": " + 
-				"<img src = 'media/" + data[i].mainPicture + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + 
-				"<img src = 'media/" + data[i].userPictures + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + "<br>";
+				"<img src = '/media/" + data[i].mainPicture + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + 
+				"<img src = '/media/" + data[i].userPictures + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + "<br>";
 			}
 			$("#main_board").html(insert);
 		},
@@ -221,8 +221,27 @@ function show_profilepic(){
 			alert(e);
 		}
 	});
-
 }
+
+function show_closet(){
+		$.ajax({
+		type: 'GET',
+		url: '/getCloset',
+		contentType: "application/json",
+		success: function(data) {
+			var insert = 'My Closet: <br>';
+			for (var i = 0; i < data.length; i++) {
+			    insert = insert + data[i].author + ": " + 
+				"<img src = '/media/" + data[i].mainPicture + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + 
+				"<img src = '/media/" + data[i].userPictures + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + "<br>";
+			}
+			$("#main_board").html(insert);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+};
 
 $(document).ready(function(){
 	show_livefeed();
@@ -242,11 +261,11 @@ $(document).ready(function(){
 		<div id = "leftpart">
 			<section id="profilepic_section">
 				<div id = 'profilepic_photo'>
-					<img src = "{{thisProfile.profilePictureLink.url}}" HEIGHT="200" WIDTH="138" BORDER="1">
+					<img src = "{{thisProfile.profilePictureLink.url}}" HEIGHT="145" WIDTH="145" BORDER="1">
 					<!-- <img src = "{{thisProfile.profilePictureLink}}"> -->
 				</div>
 				<p>{{thisUser.first_name}} {{thisUser.last_name}}</p>
-				<p><a class = "button" href="/editProfile">Edit Profile</a></p>
+				<p><a class = "button" id ="edit" href="/editProfile">Edit Profile</a></p>
 			</section>
 		
 			<section id="sidebar">
@@ -270,7 +289,7 @@ $(document).ready(function(){
 					<menu id = "thumbnails">
                                             <ul>
 						<li><input class = "button" type="button" onclick="show_livefeed();" value="Stream" /></li>
-						<li><input class = "button" type="button" onclick="apparel_nojson_request();" value="Closet" /></li>
+						<li><input class = "button" type="button" onclick="show_closet();" value="Closet" /></li>
 						<li><input class = "button" type="button" onclick="friends_request();" value="Followers" /></li>
 						<li><a class = "button" href="/newPost">New Post</a></li>
 						<li><a class = "button" href="/accounts/logout/">Log Out</a></li>

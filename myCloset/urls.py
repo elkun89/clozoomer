@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^getProfile/$', views.getProfile, name  = 'getProfile'),
     url(r'^editProfile/$', views.editProfile, name  = 'editProfile'),
     url(r'^newPost/$', views.createPost, name  = 'newPost'),
-    url(r'^getPosts/$', views.showPosts, name  = 'getPosts'),                   
+    url(r'^getPosts/$', views.showPosts, name  = 'getPosts'),
+    url(r'^getCloset/$', views.displayCloset, name  = 'getCloset') 
 )
 

@@ -48,8 +48,6 @@ def landing(request):
     thisUser = request.user;
     thisProfile = UserProfile.objects.get(user = request.user);
 
-    showPosts(request);
-    
     context = Context({  # Map the examples in HTML to the examples variable
                                                                         'usrCategories' : usrCategories,
                                                                         'usrApparel' : usrApparel,
@@ -141,7 +139,7 @@ def register(request):
             newProfile.last_name = newUser.last_name
             newProfile.email = newUser.email
             newProfile.gender = form.cleaned_data['gender']
-            newProfile.profilePictureLink = "users/ak.png"
+            newProfile.profilePictureLink = "/media/users/defaultProfile.jpg"
             newProfile.save()
             return HttpResponseRedirect('/accounts/login')
     else:
@@ -235,22 +233,24 @@ def editProfile(request):
 def showPosts(request):
     uprofile = UserProfile.objects.get(user = request.user)
     ufriends = UserProfile.objects.filter(id__in = uprofile.friends.all())
-    
     userPosts = list()
+
+    if len(ufriends) == 0:
+        return Response('');
     
     for user in ufriends:
         posts = Post.objects.filter(author = user)
-        for post in posts:
-            userPosts.append(post);
-            #assert False
-            
-        serializer = PostSerializer(userPosts);
+        if len(posts) == 0:
+            return Response('');
+        else:
+            for post in posts:
+                userPosts.append(post);
+                serializer = PostSerializer(userPosts);
+            return Response(serializer.data);
         
-    return Response(serializer.data)
-
 
 #===============================================================================
-# function to display posts to friends
+# function to create posts
 # @param request: the http request sent by the user
 #===============================================================================
 @login_required
@@ -270,3 +270,21 @@ def createPost(request):
     })
 
 
+#===============================================================================
+# function to display own posts in closet
+# @param request: the http request sent by the user
+#===============================================================================
+@api_view(['GET'])
+def displayCloset(request):
+    uprofile = UserProfile.objects.get(user = request.user)
+    userPosts = list()
+
+    posts = Post.objects.filter(author = request.user)
+    if len(posts) == 0:
+        return Response('');
+    else:
+        for post in posts:
+            userPosts.append(post);
+            serializer = PostSerializer(userPosts);
+            
+        return Response(serializer.data);

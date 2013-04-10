@@ -40,5 +40,6 @@ class ApparelInstanceSerializer(serializers.ModelSerializer):
         model = ApparelInstance
 
 class PostSerializer(serializers.ModelSerializer):
+    author = serializers.Field(source='author.username')
     class Meta:
         model = Post
