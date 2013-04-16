@@ -34,7 +34,7 @@ class ApparelType(models.Model):
 class ApparelInstance(models.Model):
     type = models.ForeignKey(ApparelType)
     timeOfCreation = models.DateTimeField(auto_now_add=True)
-    locationOfPurchase = models.ForeignKey('Location')
+    #locationOfPurchase = models.ForeignKey('Location')
     owner = models.ForeignKey(User, related_name='apparels')
     categories = models.ManyToManyField('Category', blank = True)
     def __unicode__(self):

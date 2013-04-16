@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^editProfile/$', views.editProfile, name  = 'editProfile'),
     url(r'^newPost/$', views.createPost, name  = 'newPost'),
     url(r'^getPosts/$', views.showPosts, name  = 'getPosts'),
-    url(r'^getCloset/$', views.displayCloset, name  = 'getCloset') 
+    url(r'^getCloset/$', views.displayCloset, name  = 'getCloset'),
+    url(r'^addApparelInstance/$', views.add_apparel_instance, name = 'add_apparel_instance')
 )
 

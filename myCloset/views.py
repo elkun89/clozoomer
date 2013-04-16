@@ -254,25 +254,46 @@ def showPosts(request):
 #===============================================================================
 @login_required
 def createPost(request):
-    #oldPost = Post.objects.get(author = request.user)
-    #if request.method == 'POST':                                    #process the information if the request is post
+    if request.method == 'POST':                                    #process the information if the request is post
         form = PostForm(request.user, request.POST, request.FILES)
         if form.is_valid():
             newPost = form.save(commit = False)
             newPost.author = request.user
             newPost.save()
-            return HttpResponseRedirect('/')
-    #else:
-    #    form = PostForm(request.user, instance = oldPost, initial = {})
-        return render(request, 'formTemplate.html', {
+        return HttpResponseRedirect('/')
+    else:
+        form = PostForm(request.user)
+        return render(request, 'new_post_form.html', {
             'form': form
     })
+        
+#===============================================================================
+# function to add apparel instances
+# @param request: the http request sent by the user
+#===============================================================================
+@login_required
+def add_apparel_instance(request):
+    if request.method == 'POST':                                    #process the information if the request is post
+        form = InstanceForm(request.POST)
+        if form.is_valid():
+            newInstance = form.save(commit = False)
+            newInstance.owner = request.user
+            newInstance.save()
+            return HttpResponseRedirect('/')
+    else:
+        form = InstanceForm()
+        form.fields['type'].widget = forms.HiddenInput()
+        return render(request, 'new_apparel_form.html', {
+            'form': form
+    })
+
 
 
 #===============================================================================
 # function to display own posts in closet
 # @param request: the http request sent by the user
 #===============================================================================
+@login_required
 @api_view(['GET'])
 def displayCloset(request):
     uprofile = UserProfile.objects.get(user = request.user)

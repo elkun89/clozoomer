@@ -1,15 +1,5 @@
 <!DOCTYPE html>
 
-<!-- <html>
-{% load staticfiles %}
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" media="screen"/>
-<script src="{% static "js/jquery.js" %}"></script>
-<script src="{% static "js/functions.js" %}" ></script>
-<script src="{% static "js/highlight.js" %}"></script>
-</head> -->
-
 <html lang="en">
 {% load staticfiles %}
 	<head>
@@ -24,35 +14,7 @@
 
 <script>
 
-// function request() {
-// 	$.getJSON('http://130.215.126.187:8000/rest/brands/?format=json', function(data) {
-// 		var item = '';
-
-// 		window.alert('hello');
-
-// 		for(i = 0; i < data.length; i++){
-// 			if(jQuery.inArray(data[i].id, itemIDs) == -1 && data[i].title != null){
-// 				item = '<a target="_blank" href="'+ data[i].link +'"><div id="item"><p id="source">' + data[i].source + '</p><p id="title">' +data[i].title + '</p><p id="date">' + data[i].date + '</p></p><hr/></a>';
-// 				itemIDs.push(data[i].id);
-
-
-// 				$(item).insertAfter("#top").hide().fadeIn("slow");
-// 			}
-// 		}
-// 	});
-
-// 	if(query != 'new'){ $('p').highlight(query); }
-// }
-
-// function query_get(){    
-// 	var querystr = window.location.href.split("?q=");   
-// 	return querystr[1];   
-// }
-
-
 function show_livefeed(){
-//	var insert = '<div class = "newsfeed"><p>Your friend just bought a shoe at Nike:</p><img src = "{% static "images/feed1.jpg" %}" HEIGHT="138" WIDTH="220" BORDER="1"></div><div class = "newsfeed"><p>Your friend just bought a skirt:</p><img src = "{% static "images/feed2.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1"></div><div class = "newsfeed"><p>Your friend just posted 2 new pictures with the clothes that she purchased at XXX on 06/15/2012 via facebook:</p><img src = "{% static "images/feed3.jpg" %}" HEIGHT="200" WIDTH="138" BORDER="1"><img src = "{% static "images/feed3a.jpg" %}"><img src = "{% static "images/feed3b.jpg" %}"><img src = "{% static "images/feed3c.jpg" %}"></div>';
-//	$("#main_board").html(insert);
 		$.ajax({
 		type: 'GET',
 		url: '/getPosts',
@@ -243,16 +205,34 @@ function show_closet(){
 	});
 };
 
+function create_post(){
+		$.ajax({
+		type: 'GET',
+		url: '/newPost',
+		success: function(data) {
+			$("#main_board").html(data);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+};
+
+function add_apparel(){
+		$.ajax({
+		type: 'GET',
+		url: '/addApparelInstance',
+		success: function(data) {
+			$("#main_board").html(data);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+};
+
 $(document).ready(function(){
 	show_livefeed();
-	//show_profilepic();
-	//profile_request(); 
-	// $("#clear").click(function(){
-	// 	var clear = '';
-	// 	$("#apparel").html(clear);
-	// 	$("#categories").html(clear);
-	// 	$("#profile").html(clear);
-	// });
 });
 
 </script>
@@ -291,7 +271,9 @@ $(document).ready(function(){
 						<li><input class = "button" type="button" onclick="show_livefeed();" value="Stream" /></li>
 						<li><input class = "button" type="button" onclick="show_closet();" value="Closet" /></li>
 						<li><input class = "button" type="button" onclick="friends_request();" value="Followers" /></li>
-						<li><a class = "button" href="/newPost">New Post</a></li>
+						<li><input class = "button" type="button" onclick="create_post();" value="New Post" /></li>
+						<li><input class = "button" type="button" onclick="add_apparel();" value="Add Apparel" /></li>
+						<li><a class = "button" href="/addApparelInstance">Add Apparel</a></li>
 						<li><a class = "button" href="/accounts/logout/">Log Out</a></li>
                                             </ul>
 				</div>

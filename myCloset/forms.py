@@ -1,12 +1,11 @@
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
-from myCloset.models import UserProfile
+from myCloset.models import UserProfile, ApparelInstance, ApparelType
 from django.db.models import Q
 from myCloset.models import Post
 
 class UserForm(forms.Form):
-    
     username = forms.CharField(max_length = 50)
     first_name = forms.CharField(label="First Name",max_length = 20)
     last_name = forms.CharField(label="Last Name", max_length = 20)
@@ -53,10 +52,22 @@ class PostForm(ModelForm):
     def __init__(self, user, *args, **kwargs):
         super(PostForm, self).__init__(*args, **kwargs)
 
-        
-    #content = forms.CharField(max_length = 500)
-    #mainPicture = forms.ImageField(upload_to = 'users', blank = True)
-    #userPictures = forms.ImageField(upload_to = 'users' blank = True)
+# form for adding new apparel instances
+class InstanceForm(ModelForm):
+    barcode = forms.CharField(max_length = 100)
+    class Meta:
+        model = ApparelInstance
+    
+    def clean(self):
+        cleaned_data = super(InstanceForm, self).clean()
+        cleaned_barcode = cleaned_data.get('barcode')
+        try:
+            this_apparel_type = ApparelType.objects.get(barcode = cleaned_barcode)              #get or create uncategorized
+            self.type = this_apparel_type
+        except:
+            raise forms.ValidationError("The apparel you're trying to add isn't in the database!")
+        cleaned_data = super(InstanceForm, self).clean()
+        return cleaned_data
         
         
         
