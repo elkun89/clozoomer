@@ -234,19 +234,18 @@ def showPosts(request):
     uprofile = UserProfile.objects.get(user = request.user)
     ufriends = UserProfile.objects.filter(id__in = uprofile.friends.all())
     userPosts = list()
+    user_list = list(ufriends)
+    user_list.append(request.user)
 
-    if len(ufriends) == 0:
+    if not user_list:
         return Response('');
     
-    for user in ufriends:
+    for user in user_list:
         posts = Post.objects.filter(author = user)
-        if len(posts) == 0:
-            return Response('');
-        else:
-            for post in posts:
-                userPosts.append(post);
-                serializer = PostSerializer(userPosts);
-            return Response(serializer.data);
+        for post in posts:
+            userPosts.append(post);
+    serializer = PostSerializer(userPosts);
+    return Response(serializer.data);
 
 #===============================================================================
 # function to create posts
