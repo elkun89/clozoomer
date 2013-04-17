@@ -197,7 +197,7 @@ def getFriends(request):
     return Response(serializer.data)
 
 #===============================================================================
-# function to get the friends of a certain user
+# functions to get and to edit profiles
 # @param request: the http request sent by the user
 #===============================================================================
 @api_view(['GET'])
@@ -276,13 +276,18 @@ def add_apparel_instance(request):
     if request.method == 'POST':                                    #process the information if the request is post
         form = InstanceForm(request.POST)
         if form.is_valid():
-            newInstance = form.save(commit = False)
+            newInstance = ApparelInstance()
+            newInstance.category = form.cleaned_data['categories']
             newInstance.owner = request.user
+            cleaned_barcode = form.cleaned_data['barcode']
+            newInstance.type = ApparelType.objects.get(barcode = cleaned_barcode)
             newInstance.save()
             return HttpResponseRedirect('/')
+        else:
+            return HttpResponse("Form data not valid!")
     else:
         form = InstanceForm()
-        form.fields['type'].widget = forms.HiddenInput()
+        #form.fields['type'].widget = forms.HiddenInput()
         return render(request, 'new_apparel_form.html', {
             'form': form
     })

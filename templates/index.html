@@ -159,7 +159,8 @@ function profile_request(){
 function apparel_nojson_request(){
 	var clear = '';
 	$("#main_board").html(clear);
-	var insert = '{% for a in usrApparel %}Name : {{a.type.name}} <br>Time Added to Closet: {{a.timeOfCreation}} <br>Location of Purchase : {{a.locationOfPurchase.address}}<br><br>{% endfor %}';
+	var insert = '{% for a in usrApparel %}Name : {{a.type.name}} <br>Time Added to Closet: {{a.timeOfCreation}} <br> Image: ';
+	insert = insert + '<img src = "/media/{{a.type.pictureLink}}" HEIGHT="145" WIDTH="145" BORDER="1"> <br><br>{% endfor %}'
 	$("#main_board").html(insert);
 }
 
@@ -269,11 +270,10 @@ $(document).ready(function(){
 					<menu id = "thumbnails">
                                             <ul>
 						<li><input class = "button" type="button" onclick="show_livefeed();" value="Stream" /></li>
-						<li><input class = "button" type="button" onclick="show_closet();" value="Closet" /></li>
+						<li><input class = "button" type="button" onclick="apparel_nojson_request();" value="Closet" /></li>
 						<li><input class = "button" type="button" onclick="friends_request();" value="Followers" /></li>
 						<li><input class = "button" type="button" onclick="create_post();" value="New Post" /></li>
 						<li><input class = "button" type="button" onclick="add_apparel();" value="Add Apparel" /></li>
-						<li><a class = "button" href="/addApparelInstance">Add Apparel</a></li>
 						<li><a class = "button" href="/accounts/logout/">Log Out</a></li>
                                             </ul>
 				</div>

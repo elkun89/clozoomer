@@ -57,16 +57,15 @@ class InstanceForm(ModelForm):
     barcode = forms.CharField(max_length = 100)
     class Meta:
         model = ApparelInstance
+        fields = ('categories',)
     
     def clean(self):
         cleaned_data = super(InstanceForm, self).clean()
         cleaned_barcode = cleaned_data.get('barcode')
         try:
-            this_apparel_type = ApparelType.objects.get(barcode = cleaned_barcode)              #get or create uncategorized
-            self.type = this_apparel_type
+            ApparelType.objects.get(barcode = cleaned_barcode)              #get or create uncategorized
         except:
             raise forms.ValidationError("The apparel you're trying to add isn't in the database!")
-        cleaned_data = super(InstanceForm, self).clean()
         return cleaned_data
         
         
