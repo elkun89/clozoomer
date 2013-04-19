@@ -34,7 +34,7 @@ class UserForm(forms.Form):
 class ProfileForm(ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('first_name', 'last_name', 'email', 'gender','friends', 'profilePictureLink')
+        fields = ('first_name', 'last_name', 'email', 'gender', 'profilePictureLink')
         
     #adding overridden initialization field, restrict categories to the ones with the user as the author    
     def __init__(self, user, *args, **kwargs):

@@ -205,6 +205,9 @@ def getProfile(request):
     uprofile = UserProfile.objects.get(user = request.user)
     serializer = UserProfileSerializer(uprofile)
     return Response(serializer.data)
+##
+# function to edit profile
+# @param request: the http request sent by the user
 
 @login_required
 def editProfile(request):
@@ -215,6 +218,9 @@ def editProfile(request):
             newProfile = form.save(commit = False)
             newProfile.user = request.user
             newProfile.username = request.user.username
+            new_picture_link = form.cleaned_data['profilePictureLink']
+            if not new_picture_link:
+                newProfile.profilePictureLink = oldProfile.profilePictureLink
             oldProfile.delete()
             newProfile.save()
             return HttpResponseRedirect('/')
