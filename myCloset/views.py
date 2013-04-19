@@ -239,18 +239,18 @@ def editProfile(request):
 def showPosts(request):
     uprofile = UserProfile.objects.get(user = request.user)
     ufriends = UserProfile.objects.filter(id__in = uprofile.friends.all())
-    userPosts = list()
-    user_list = list(ufriends)
-    user_list.append(request.user)
+    user_posts = list()
+    user_profile_list = list(ufriends)
+    user_profile_list.append(uprofile)
 
-    if not user_list:
+    if not user_profile_list:
         return Response('');
     
-    for user in user_list:
-        posts = Post.objects.filter(author = user)
+    for user_profile in user_profile_list:
+        posts = Post.objects.filter(author = user_profile.user)
         for post in posts:
-            userPosts.append(post);
-    serializer = PostSerializer(userPosts);
+            user_posts.append(post);
+    serializer = PostSerializer(user_posts);
     return Response(serializer.data);
 
 #===============================================================================
@@ -337,11 +337,15 @@ def delete_apparel_instance(request, idNum):
 # @param request: http request from the user
 # @param idNum: the id of the post to be deleted
 
+@login_required
 def delete_post(request, idNum):
     try:
         post_to_delete = Post.objects.get(id = idNum)
-        post_to_delete.delete()
-        return HttpResponseRedirect("/#show_livefeed")
+        if request.user == post_to_delete.author: 
+            post_to_delete.delete()
+            return HttpResponseRedirect("/#show_livefeed")
+        else:
+            return HttpResponse("Deletion failed: you don't own this post!")
     except:
         return HttpResponse("Deletion failed: object not found!")
 
