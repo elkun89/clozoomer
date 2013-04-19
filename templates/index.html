@@ -14,7 +14,14 @@
 
 <script>
 
+function clean(){
+	$("#main_board").html("");
+	$("#add_apparel_bar").html("");
+	$("#post_bar").html("");
+}
+
 function show_livefeed(){
+		clean();
 		$.ajax({
 		type: 'GET',
 		url: '/getPosts',
@@ -24,11 +31,12 @@ function show_livefeed(){
 			for (var i = 0; i < data.length; i++) {
 			    insert = insert + data[i].author + ": " + data[i].content + "<br>";
 			    if(data[i].mainPicture){
-			    	insert = insert + "<img src = '/media/" + data[i].mainPicture + "' WIDTH='138' BORDER='1'>";
+			    	insert = insert + "<img src = '/media/" + data[i].mainPicture + "' WIDTH='138' BORDER='1'><br>";
 			    }
 			    else if(data[i].userPictures){
 			    	insert = insert + "<img src = '/media/" + data[i].userPictures + "' WIDTH='138' BORDER='1'>" + "<br>";
 			    }
+			    insert = insert + '<a class = "button" href="/deletePost/' + data[i].id + '">delete</a><br>';
 			}
 			$("#main_board").html(insert);
 		},
@@ -36,6 +44,8 @@ function show_livefeed(){
 			alert('error!');
 		}
 	});
+	var hashVal = 'show_livefeed';
+	window.location.hash = '#' + hashVal;
 };
 
 function getTypeData(id){	
@@ -75,34 +85,34 @@ function getLocationName(id){
 	return locationName;
 };
 
-function apparel_request(){
-	var clear = '';
-	$("#main_board").html(clear);
-	$.ajax({
-		type: 'GET',
-		url: '/apparel',
-		contentType: "application/json",
-		success: function(data) {
-			var apparelName;
-			var locationName;
-			var insert = "List of User's Apparel: <br>";
-			for (var i = 0; i < data.length; i++) {
-				apparelName = getTypeData(data[i].type).name;
-				locationName = getLocationName(data[i].locationOfPurchase);	
-				insert = insert + "Name: " + apparelName + "<br>";
-			    insert = insert + "Purchase Time: " + data[i].timeOfCreation + "<br>";
-			    insert = insert + "Location: " + locationName + "<br>";
+// function apparel_request(){
+// 	var clear = '';
+// 	$("#main_board").html(clear);
+// 	$.ajax({
+// 		type: 'GET',
+// 		url: '/apparel',
+// 		contentType: "application/json",
+// 		success: function(data) {
+// 			var apparelName;
+// 			var locationName;
+// 			var insert = "List of User's Apparel: <br>";
+// 			for (var i = 0; i < data.length; i++) {
+// 				apparelName = getTypeData(data[i].type).name;
+// 				locationName = getLocationName(data[i].locationOfPurchase);	
+// 				insert = insert + "Name: " + apparelName + "<br>";
+// 			    insert = insert + "Purchase Time: " + data[i].timeOfCreation + "<br>";
+// 			    insert = insert + "Location: " + locationName + "<br>";
 
-			    // $("#apparel").append($("apparelType"), $(apparelInstance));
-			    // $("#apparelType").clear;
-			    // $("#apparelInstance").clear;
-			}
-			$("#main_board").html(insert);
-		},
-		error: function(e) {
-		}
-	});
-};
+// 			    // $("#apparel").append($("apparelType"), $(apparelInstance));
+// 			    // $("#apparelType").clear;
+// 			    // $("#apparelInstance").clear;
+// 			}
+// 			$("#main_board").html(insert);
+// 		},
+// 		error: function(e) {
+// 		}
+// 	});
+// };
 
 function category_request(){
 	$.ajax({
@@ -122,6 +132,7 @@ function category_request(){
 };
 
 function friends_request(){
+	clean();
 	var clear = '';
 	$("#main_board").html(clear);
 	$.ajax({
@@ -140,6 +151,8 @@ function friends_request(){
 			alert('error!');
 		}
 	});
+	var hashVal = 'friends_request';
+	window.location.hash = '#' + hashVal;
 };
 
 function profile_request(){
@@ -161,11 +174,16 @@ function profile_request(){
 }
 
 function apparel_nojson_request(){
+	clean();
 	var clear = '';
 	$("#main_board").html(clear);
 	var insert = '{% for a in usrApparel %}Name : {{a.type.name}} <br>Time Added to Closet: {{a.timeOfCreation}} <br> Image: ';
-	insert = insert + '<img src = "/media/{{a.type.pictureLink}}" WIDTH="150" BORDER="1"> <br><br>{% endfor %}'
+	insert = insert + '<img src = "/media/{{a.type.pictureLink}}" WIDTH="150" BORDER="1"> <br><br>';
+	insert = insert + '<a class = "button" href="/deleteApparelInstance/{{a.id}}/">delete</a><br>';
+	insert = insert + '{% endfor %}';
 	$("#main_board").html(insert);
+	var hashVal = 'apparel_nojson_request';
+	window.location.hash = '#' + hashVal;
 }
 
 function show_profilepic(){
@@ -190,58 +208,73 @@ function show_profilepic(){
 	});
 }
 
-function show_closet(){
-		$.ajax({
-		type: 'GET',
-		url: '/getCloset',
-		contentType: "application/json",
-		success: function(data) {
-			var insert = 'My Closet: <br>';
-			for (var i = 0; i < data.length; i++) {
-			    insert = insert + data[i].author + ": ";
-			    if(data[i].mainPicture){
-					insert = insert + "<img src = '/media/" + data[i].mainPicture + "' HEIGHT='200' WIDTH='138' BORDER='1'>";
-				}
-				else if(data[i].userPictures){
-					insert = insert + "<img src = '/media/" + data[i].userPictures + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + "<br>";
-				}
-			}
-			$("#main_board").html(insert);
-		},
-		error: function(e) {
-			alert('error!');
-		}
-	});
-};
+// function show_closet(){
+// 		$.ajax({
+// 		type: 'GET',
+// 		url: '/getCloset',
+// 		contentType: "application/json",
+// 		success: function(data) {
+// 			var insert = 'My Closet: <br>';
+// 			for (var i = 0; i < data.length; i++) {
+// 			    insert = insert + data[i].author + ": ";
+// 			    if(data[i].mainPicture){
+// 					insert = insert + "<img src = '/media/" + data[i].mainPicture + "' HEIGHT='200' WIDTH='138' BORDER='1'>";
+// 				}
+// 				else if(data[i].userPictures){
+// 					insert = insert + "<img src = '/media/" + data[i].userPictures + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + "<br>";
+// 				}
+// 			}
+// 			$("#main_board").html(insert);
+// 		},
+// 		error: function(e) {
+// 			alert('error!');
+// 		}
+// 	});
+// };
 
 function create_post(){
-		$.ajax({
+	clean();
+	$.ajax({
 		type: 'GET',
 		url: '/newPost',
 		success: function(data) {
-			$("#main_board").html(data);
+			$("#post_bar").html(data);
 		},
 		error: function(e) {
 			alert('error!');
 		}
 	});
+	show_livefeed();
+	var hashVal = 'create_post';
+	window.location.hash = '#' + hashVal;
 };
 
 function add_apparel(){
-		$.ajax({
+	clean();
+	$.ajax({
 		type: 'GET',
 		url: '/addApparelInstance',
 		success: function(data) {
-			$("#main_board").html(data);
+			$("#add_apparel_bar").html(data);
 		},
 		error: function(e) {
 			alert('error!');
 		}
 	});
+	apparel_nojson_request();
+	var hashVal = 'add_apparel';
+	window.location.hash = '#' + hashVal;
 };
 
 $(document).ready(function(){
-	show_livefeed();
+	var hash = window.location.hash.substr(1);
+	if(hash){
+		var func = window[hash];
+		func();
+	}
+	else{
+		show_livefeed();
+	}
 });
 
 </script>
@@ -276,7 +309,7 @@ $(document).ready(function(){
 		
 		<div id = "rightpart">
 			<section id="main_content">
-				<div>
+				<div id = "thumbnail_block">
 					<menu id = "thumbnails">
                                             <ul>
 						<li><input class = "button" type="button" onclick="show_livefeed();" value="Stream" /></li>
@@ -286,10 +319,13 @@ $(document).ready(function(){
 						<li><input class = "button" type="button" onclick="add_apparel();" value="Add Apparel" /></li>
 						<li><a class = "button" href="/accounts/logout/">Log Out</a></li>
                                             </ul>
+                    </menu>
+				</div>
+				<div id = "post_bar">
+				</div>
+				<div id = "add_apparel_bar">
 				</div>
 				<div id = "main_board" >
-				</div>
-				<div id = "test_board" >
 				</div>
 			</section>
 		</div>

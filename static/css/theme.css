@@ -50,14 +50,17 @@ font-size:12px;
    }
 
 #leftpart{
-float: left;
 padding:5px;
+float: left;
+margin-left: 15%;
+margin-top: 1%;
 width: 145px;
+height:800px;
 background: #F0F8FF
 }
 
 #rightpart{
-margin:0px 0px 0px 155px;
+margin:0px 0px 0px 0px;
 padding:5px;
 background:#222;
 }
@@ -76,8 +79,13 @@ margin:5px;
 
 
 #main_content{
+margin-left: 27%;
+margin-right: 15%;
 padding:20px;
+width:55%;
+min-height:800px;
 background:#eee;
+line-height:3em;
 }
 
 

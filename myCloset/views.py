@@ -259,7 +259,7 @@ def createPost(request):
             newPost = form.save(commit = False)
             newPost.author = request.user
             newPost.save()
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/#show_livefeed')
     else:
         form = PostForm(request.user)
         return render(request, 'new_post_form.html', {
@@ -281,7 +281,7 @@ def add_apparel_instance(request):
             cleaned_barcode = form.cleaned_data['barcode']
             newInstance.type = ApparelType.objects.get(barcode = cleaned_barcode)
             newInstance.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/#apparel_nojson_request')
         else:
             return HttpResponse("Form data not valid!")
     else:
@@ -312,3 +312,35 @@ def displayCloset(request):
             serializer = PostSerializer(userPosts);
             
         return Response(serializer.data);
+
+##
+# function to delete apparel instances
+# @param request: the http request from the user
+# @param idNum: the id of the apparel instance to be deleted
+ 
+def delete_apparel_instance(request, idNum):
+    try:
+        apparel_to_delete = ApparelInstance.objects.get(id = idNum)
+        apparel_to_delete.delete()
+        return HttpResponseRedirect("/#apparel_nojson_request")
+    except:
+        return HttpResponse("Deletion failed: object not found!")
+    
+##
+# function to delete posts
+# @param request: http request from the user
+# @param idNum: the id of the post to be deleted
+
+def delete_post(request, idNum):
+    try:
+        post_to_delete = Post.objects.get(id = idNum)
+        post_to_delete.delete()
+        return HttpResponseRedirect("/#show_livefeed")
+    except:
+        return HttpResponse("Deletion failed: object not found!")
+
+
+
+
+
+
