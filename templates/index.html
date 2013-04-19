@@ -258,48 +258,40 @@ $(document).ready(function(){
 </script>
 
 	<body>
-		<div id = "leftpart">
-			<section id="profilepic_section">
+		<div id = "top">
+			<div id = "profile">
 				<div id = 'profilepic_photo'>
 					<img src = "{{thisProfile.profilePictureLink.url}}" HEIGHT="145" WIDTH="145" BORDER="1">
 					<!-- <img src = "{{thisProfile.profilePictureLink}}"> -->
 				</div>
-				<p>{{thisUser.first_name}} {{thisUser.last_name}}</p>
+				<p id = 'username'>{{thisUser.first_name}} {{thisUser.last_name}}</p>
 				<p><a class = "button" id ="edit" href="/editProfile">Edit Profile</a></p>
-			</section>
-		
-			<section id="sidebar">
-				<h4>Current Trends</h4>
-				<p> XXX </p>
-				<p> XXX </p>
-				<p> XXX </p>
-				<br />
-				<br />
-				<br />
-				<h4>Followed Trends</h4>
-				<p> XXX </p>
-				<p> XXX </p>
-				<p> XXX </p>
-			</section>
-		</div>
-		
-		<div id = "rightpart">
-			<section id="main_content">
-				<div>
-					<menu id = "thumbnails">
-                                            <ul>
+			</div>
+			<div id = "menu">
+				<menu id = "thumbnails">
+                    <ul>
 						<li><input class = "button" type="button" onclick="show_livefeed();" value="Stream" /></li>
 						<li><input class = "button" type="button" onclick="show_closet();" value="Closet" /></li>
 						<li><input class = "button" type="button" onclick="friends_request();" value="Followers" /></li>
 						<li><a class = "button" href="/newPost">New Post</a></li>
 						<li><a class = "button" href="/accounts/logout/">Log Out</a></li>
-                                            </ul>
-				</div>
+                    </ul>
+			</div>
+		</div>
+		
+		<div id = "bottomleft">
+			<div id="sidebar">
+				<h4>Suggestions</h4>
+			</div>
+		</div>
+		
+		<div id = "bottomright">
+			<div id="main_content">
 				<div id = "main_board" >
 				</div>
 				<div id = "test_board" >
 				</div>
-			</section>
+			</div>
 		</div>
 	</body>
 </html>

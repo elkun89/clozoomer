@@ -49,38 +49,43 @@ font-size:12px;
    background: #1b435e;
    }
 
-#leftpart{
+#top{
+width:80%;
+margin: auto;
+background: #FF3300
+}
+   
+#bottomleft{
 float: left;
 padding:5px;
 width: 145px;
 background: #F0F8FF
 }
 
-#rightpart{
+#bottomright{
 margin:0px 0px 0px 155px;
 padding:5px;
 background:#222;
 }
 
-#profilepic{
-margin:0px auto;
-padding:5px 0;
-height:250px;
-background:#666;
-text-align:center;
+#profile{
+width:30%;
 }
 
-#sidebar{
-margin:5px;
+#profilepic_photo{
+padding:5px 5px;
 }
 
+#username{
 
-#main_content{
-padding:20px;
-background:#eee;
 }
 
+#edit{
+}
 
+#menu{
+background: #F0F8FF
+}
 
 #thumbnails{
 width:100%;
@@ -103,4 +108,14 @@ margin:0 0 10px 0;
 
 li{
 list-style-type:none;
+}
+
+#sidebar{
+margin:5px;
+}
+
+
+#main_content{
+padding:20px;
+background:#eee;
 }
