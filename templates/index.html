@@ -85,35 +85,6 @@ function getLocationName(id){
 	return locationName;
 };
 
-// function apparel_request(){
-// 	var clear = '';
-// 	$("#main_board").html(clear);
-// 	$.ajax({
-// 		type: 'GET',
-// 		url: '/apparel',
-// 		contentType: "application/json",
-// 		success: function(data) {
-// 			var apparelName;
-// 			var locationName;
-// 			var insert = "List of User's Apparel: <br>";
-// 			for (var i = 0; i < data.length; i++) {
-// 				apparelName = getTypeData(data[i].type).name;
-// 				locationName = getLocationName(data[i].locationOfPurchase);	
-// 				insert = insert + "Name: " + apparelName + "<br>";
-// 			    insert = insert + "Purchase Time: " + data[i].timeOfCreation + "<br>";
-// 			    insert = insert + "Location: " + locationName + "<br>";
-
-// 			    // $("#apparel").append($("apparelType"), $(apparelInstance));
-// 			    // $("#apparelType").clear;
-// 			    // $("#apparelInstance").clear;
-// 			}
-// 			$("#main_board").html(insert);
-// 		},
-// 		error: function(e) {
-// 		}
-// 	});
-// };
-
 function category_request(){
 	$.ajax({
 		type: 'GET',
@@ -266,6 +237,45 @@ function add_apparel(){
 	window.location.hash = '#' + hashVal;
 };
 
+function show_friend_request(){
+	clean();
+	$.ajax({
+		type: 'GET',
+		url: '/showFriendRequest',
+		success: function(data) {
+			$("#main_board").html(data);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+	var hashVal = 'show_friend_request';
+	window.location.hash = '#' + hashVal;
+}
+
+function request_friend(){
+	clean();
+	$.ajax({
+		type: 'GET',
+		url: '/requestFriend',
+		success: function(data) {
+			$("#main_board").html(data);
+		},
+		error: function(e) {
+			alert('error!');
+		}
+	});
+	var hashVal = 'request_friend';
+	window.location.hash = '#' + hashVal;
+}
+
+function request_friend_success(){
+	clean();
+	$("#main_board").html("message sent");
+	var hashVal = 'request_friend_success';
+	window.location.hash = '#' + hashVal;
+}
+
 $(document).ready(function(){
 	var hash = window.location.hash.substr(1);
 	if(hash){
@@ -317,6 +327,8 @@ $(document).ready(function(){
 						<li><input class = "button" type="button" onclick="friends_request();" value="Followers" /></li>
 						<li><input class = "button" type="button" onclick="create_post();" value="New Post" /></li>
 						<li><input class = "button" type="button" onclick="add_apparel();" value="Add Apparel" /></li>
+						<li><input class = "button" type="button" onclick="request_friend();" value="Add Friend" /></li>
+						<li><input class = "button" type="button" onclick="show_friend_request();" value="Show Requests" /></li>
 						<li><a class = "button" href="/accounts/logout/">Log Out</a></li>
                                             </ul>
                     </menu>

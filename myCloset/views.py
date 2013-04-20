@@ -183,10 +183,10 @@ def listApparel(request):
     })
     return HttpResponse(template.render(context))
 
-#===============================================================================
+##
 # function to get the friends of a certain user
 # @param request: the http request sent by the user
-#===============================================================================
+
 @api_view(['GET'])
 def getFriends(request):
     uprofile = UserProfile.objects.get(user = request.user)
@@ -196,10 +196,10 @@ def getFriends(request):
     
     return Response(serializer.data)
 
-#===============================================================================
+##
 # functions to get and to edit profiles
 # @param request: the http request sent by the user
-#===============================================================================
+
 @api_view(['GET'])
 def getProfile(request):
     uprofile = UserProfile.objects.get(user = request.user)
@@ -231,10 +231,10 @@ def editProfile(request):
     })
 
 
-#===============================================================================
+##
 # function to display posts to friends
 # @param request: the http request sent by the user
-#===============================================================================
+
 @api_view(['GET'])
 def showPosts(request):
     uprofile = UserProfile.objects.get(user = request.user)
@@ -253,10 +253,10 @@ def showPosts(request):
     serializer = PostSerializer(user_posts);
     return Response(serializer.data);
 
-#===============================================================================
+##
 # function to create posts
 # @param request: the http request sent by the user
-#===============================================================================
+
 @login_required
 def createPost(request):
     if request.method == 'POST':                                    #process the information if the request is post
@@ -268,17 +268,19 @@ def createPost(request):
         return HttpResponseRedirect('/#show_livefeed')
     else:
         form = PostForm(request.user)
-        return render(request, 'new_post_form.html', {
-            'form': form
-    })
+        url = '/newPost/'
+        return render(request, 'new_form_template.html', {
+            'form': form,
+            'url' : url
+        })
         
-#===============================================================================
+##
 # function to add apparel instances
 # @param request: the http request sent by the user
-#===============================================================================
+
 @login_required
 def add_apparel_instance(request):
-    if request.method == 'POST':                                    #process the information if the request is post
+    if request.method == 'POST':                                    
         form = InstanceForm(request.POST)
         if form.is_valid():
             newInstance = ApparelInstance()
@@ -292,21 +294,46 @@ def add_apparel_instance(request):
             return HttpResponse("Form data not valid!")
     else:
         form = InstanceForm()
-        #form.fields['type'].widget = forms.HiddenInput()
-        return render(request, 'new_apparel_form.html', {
-            'form': form
-    })
+        url = '/addApparelInstance/'
+        return render(request, 'new_form_template.html', {
+            'form': form,
+            'url' : url
+        })
+        
+##
+# function to add apparel instances
+# @param request: the http request sent by the user
+
+@login_required
+def add_friend_request(request):
+    if request.method == 'POST':                                    
+        form = FriendAddForm(request.user, request.POST)
+        if form.is_valid():
+            new_request = FriendRequest()
+            new_request.requested_user = form.cleaned_data['requested_user']
+            new_request.message = form.cleaned_data['message']
+            new_request.requester = UserProfile.objects.get(user = request.user)
+            new_request.save()
+            return HttpResponseRedirect('/#request_friend_success')
+        else:
+            return HttpResponse("Form data not valid!")
+    else:
+        form = FriendAddForm(request.user)
+        url = '/requestFriend/'
+        return render(request, 'new_form_template.html', {
+            'form': form,
+            'url' : url
+        })
 
 
 
-#===============================================================================
+##
 # function to display own posts in closet
 # @param request: the http request sent by the user
-#===============================================================================
+
 @login_required
 @api_view(['GET'])
 def displayCloset(request):
-    uprofile = UserProfile.objects.get(user = request.user)
     userPosts = list()
 
     posts = Post.objects.filter(author = request.user)
@@ -348,7 +375,29 @@ def delete_post(request, idNum):
             return HttpResponse("Deletion failed: you don't own this post!")
     except:
         return HttpResponse("Deletion failed: object not found!")
+    
 
+##
+# function to list the current friend requests to the user
+
+@login_required
+def show_friend_request(request):
+    user_profile = UserProfile.objects.get(user = request.user)
+    friend_requests = FriendRequest.objects.filter(requested_user = user_profile, processed = False)
+    form = FriendConfirmForm()
+    url = '/processFriendRequest/'
+    return render(request, 'show_friend_request_form.html', {
+        'form': form,
+        'url' : url,
+        'friend_requests' : friend_requests
+    })
+    
+#def process_friend_request(request):
+#    if request.method == 'POST':
+#        form = FriendConfirmForm(request.POST)
+#        if form.is_valid():
+#            if form.cleaned_data['response'] == True:
+                
 
 
 
