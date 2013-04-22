@@ -3,33 +3,25 @@
 <head>
 	{% load staticfiles %}
 	<title>Welcome to Clozoom</title>
-	<link rel="stylesheet" href="{% static "css/login-logout-structure.css" %}" type="text/css" media="screen"/>
-	<link rel="stylesheet" href="{% static "css/reset.css" %}" type="text/css" media="screen"/>
-	<link rel="stylesheet" href="{% static "css/master.css" %}" type="text/css" media="screen"/>
-	<link rel="shortcut icon" href="{% static "img/favicon.png" %}">
 </head>
 
 <body>
 <form id="login_form" method="post" action="{% url django.contrib.auth.views.login %}" class="box login">
 
 
-
-	 <fieldset class="boxBody">
 	 <td style="color:#CCCCCC"><b>{{ form.username.label_tag }}</b></td>
 		<td>{{ form.username }}</td>
 	 <td style="color:#CCCCCC"><b>{{ form.password.label_tag }}</b></td>
-		<td>{{ form.password }}<a href='/accounts/reclaim'><b>Forgot your password?</b></a></td>
+		<td>{{ form.password }}</td>
 		{% if form.errors %}
 			<p class="errorlist">*Your username or password did not match.</p>
 		{% endif %}
 		{% csrf_token %}
-	</fieldset>
+
+		
 	<footer>
-		<!--
-	  <label><input type="checkbox" tabindex="3">Keep me logged in</label>
-	-->
-	  	<a href="/accounts/register"><font size="2">Register Now</font></a>
-	  	<input type="submit" class="btnLogin" value="Log In" tabindex="4">
+	  	<a href="/accounts/register"><font size="4">Register Now</font></a>
+	  	<input type="submit" value="Log In" tabindex="4">
 	</footer>
 
 </form>

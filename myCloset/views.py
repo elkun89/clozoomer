@@ -386,17 +386,28 @@ def show_friend_request(request):
     friend_requests = FriendRequest.objects.filter(requested_user = user_profile, processed = False)
     form = FriendConfirmForm()
     url = '/processFriendRequest/'
+    #form.fields['requester'].widget = forms.HiddenInput()
     return render(request, 'show_friend_request_form.html', {
         'form': form,
         'url' : url,
         'friend_requests' : friend_requests
     })
     
-#def process_friend_request(request):
-#    if request.method == 'POST':
-#        form = FriendConfirmForm(request.POST)
-#        if form.is_valid():
-#            if form.cleaned_data['response'] == True:
+def process_friend_request(request):
+    user_profile = UserProfile.objects.get(user = request.user)
+    if request.method == 'POST':
+        form = FriendConfirmForm(request.POST)
+        if form.is_valid():
+            this_requester = form.cleaned_data['requester']
+            responded_requests = FriendRequest.objects.filter(requester = this_requester, requested_user = user_profile)
+            if form.cleaned_data['response'] == True:
+                this_requester.friends.add(user_profile)
+                user_profile.friends.add(this_requester)
+            for each_responded_request in responded_requests:
+                each_responded_request.processed = True
+                each_responded_request.save()
+            return HttpResponseRedirect("/#friends_request")
+    return HttpResponse("Error in data!")
                 
 
 

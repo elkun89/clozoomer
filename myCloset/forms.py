@@ -87,7 +87,7 @@ class FriendAddForm(ModelForm):
 class FriendConfirmForm(ModelForm):
     class Meta:
         model = FriendRequest
-        fields = ('response',)
+        fields = ('response', 'requester')
         
         
         
