@@ -58,20 +58,6 @@ def landing(request):
                                                                         #'allPosts' : userPosts
     })
     return HttpResponse(template.render(context))
-
-#===============================================================================
-# function to give information of the user's apparel
-# @param  request: the ajax GET request 
-# @return: json data of apparel information 
-#===============================================================================
-@login_required
-@console_debug
-@api_view(['GET'])
-def listApparelByJson(request):
-    if request.method == 'GET':
-        usrApparel = ApparelInstance.objects.filter(owner = request.user)
-        instanceSerializer = ApparelInstanceSerializer(usrApparel)
-        return Response(instanceSerializer.data)
     
 #===============================================================================
 # function to list all user's categories by json

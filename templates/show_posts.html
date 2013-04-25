@@ -1,0 +1,11 @@
+
+{% for each_post in posts%}
+	{{post.author}} : {{post.content}} <br>
+	{% if post.mainPicture %}
+		<img src = '/media/{{post.mainPicture}}' WIDTH='138' BORDER='1'><br>
+	{% endif %}
+	{% if post.userPictures %}
+		<img src = '/media/{{post.userPictures}}' WIDTH='138' BORDER='1'><br>
+	{% endif %}
+	<a class = "button" href="/deletePost/{{post.id}}">delete</a><br>
+{% endfor %}

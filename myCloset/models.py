@@ -37,6 +37,7 @@ class ApparelInstance(models.Model):
     #locationOfPurchase = models.ForeignKey('Location')
     owner = models.ForeignKey(User, related_name='apparels')
     categories = models.ManyToManyField('Category', blank = True)
+    is_shared = models.BooleanField()
     def __unicode__(self):
         return self.type.name+'('+self.owner.username+')'
     

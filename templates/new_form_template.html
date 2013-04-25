@@ -1,0 +1,13 @@
+<section>
+
+	<div class="formWrapper">
+	<div class="fontModification">
+		<!-- Note's Title and Information Box -->
+		<form action = "{{url}}" enctype="multipart/form-data" method="post" class="generalText">{% csrf_token %}
+			{{ form.as_p }}
+			<input type="submit" value="Submit" />
+		</form>
+		</div>
+	</div>
+
+</section>
