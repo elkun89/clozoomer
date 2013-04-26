@@ -114,6 +114,13 @@ border-radius: 10px; /* future proofing */
    margin-bottom: 40%;
 }
 
+#signup_panel{
+   margin-left: 30%;
+   margin-right: 30%;
+   margin-top: 2%;
+   margin-bottom: 40%;
+}
+
 
 #thumbnails{
 width:100%;
