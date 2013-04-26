@@ -362,7 +362,9 @@ $(document).ready(function(){
     <!-- This is source ordered to be pulled to the left on larger screens -->
     <div class="large-3 pull-9 columns">
       <div class="panel">
-        <a href="#"><img src = "{{thisProfile.profilePictureLink.url}}" HEIGHT="145" WIDTH="145" BORDER="1"></a>
+        <ul class="clearing-thumbs" data-clearing>
+          <li><img src = "{{thisProfile.profilePictureLink.url}}" HEIGHT="145" WIDTH="145" BORDER="1"></li>
+        </ul>
         <h5><a href="#">{{thisProfile.first_name}} {{thisProfile.last_name}}</a></h5>
           <div class="section-container vertical-nav" data-section data-options="deep_linking: false; one_up: true">
           <section class="section">

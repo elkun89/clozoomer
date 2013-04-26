@@ -107,6 +107,12 @@ line-height:3em;
 border-radius: 10px; /* future proofing */
 }
 
+#login_panel{
+   margin-left: 30%;
+   margin-right: 30%;
+   margin-top: 15%;
+   margin-bottom: 40%;
+}
 
 
 #thumbnails{

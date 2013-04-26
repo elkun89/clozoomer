@@ -2,30 +2,42 @@
 <html>
 <head>
 	{% load staticfiles %}
-	<title>Welcome to Clozoom</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Clozoom</title>
+
+  <link rel="stylesheet" href="{% static "css/normalize.css" %}"/>
+  <link rel="stylesheet" href="{% static "css/theme.css" %}" type="text/css" media="screen"/>
+  <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
+
+  <script src="{% static "js/jquery.js" %}"></script>
+  <script src="{% static "js/highlight.js" %}"></script>
+  <script src="{% static "js/vendor/custom.modernizr.js" %}"></script>
+
 </head>
 
+
 <body>
-<form id="login_form" method="post" action="{% url django.contrib.auth.views.login %}" class="box login">
-
-
-	 <td style="color:#CCCCCC"><b>{{ form.username.label_tag }}</b></td>
-		<td>{{ form.username }}</td>
-	 <td style="color:#CCCCCC"><b>{{ form.password.label_tag }}</b></td>
-		<td>{{ form.password }}</td>
-		{% if form.errors %}
-			<p class="errorlist">*Your username or password did not match.</p>
-		{% endif %}
-		{% csrf_token %}
-
-		
-	<footer>
-	  	<a href="/accounts/register"><font size="4">Register Now</font></a>
-	  	<input type="submit" value="Log In" tabindex="4">
-	</footer>
-
-</form>
-
+	<div id = "login_panel" class = "large-8 large-centered columns">
+		<div class = "panel">
+			<form id="login_form" method="post" action="{% url django.contrib.auth.views.login %}" class="box login">
+				 <td style="color:#CCCCCC"><b>{{ form.username.label_tag }}</b></td>
+					<td>{{ form.username }}</td>
+				 <td style="color:#CCCCCC"><b>{{ form.password.label_tag }}</b></td>
+					<td>{{ form.password }}</td>
+					{% if form.errors %}
+						<p class="errorlist">*Your username or password did not match.</p>
+					{% endif %}
+					{% csrf_token %}
+				  	<ul class="inline-list">
+				  		<li><input class = "small button" type="submit" value="Log In" tabindex="4"></li>
+					    <li><a href="/accounts/register"><font size="4">Register Now</font></a></li>
+					  </ul>
+			</form>
+		</div>
+	</div>
+	<div class = "large-8 push-8 columns">
+	</div>
 
 </body>
 </html>
