@@ -14,7 +14,15 @@
 	    	
 	      <h5>{{a.type.name}}</h5>
 	      <h6 class="subheader">Added on: {{a.timeOfCreation}}</h6>
-	      <h6 class="subheader"><a href="/deleteApparelInstance/{{a.id}}/">delete</a></h6>
+	      <ul class="inline-list">
+	      	{% if not a.is_shared %}
+			<li><a href="/shareInstance/{{a.id}}/">share</a></li>
+			{% endif %}
+			{% if a.is_shared %}
+			<li><a href="/shareInstance/{{a.id}}/">unshare</a></li>
+	      	{% endif %}
+			<li><a href="/deleteApparelInstance/{{a.id}}/">delete</a></li>
+		  </ul>
 	    </div>
 	  </div>
 	{% endfor %}
