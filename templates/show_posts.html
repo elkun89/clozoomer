@@ -1,7 +1,7 @@
 {% for each_post in user_posts%}
 <hr>
 <div class="row">
-	<div class="large-2 columns small-3"><img src="{{user_profile.profilePictureLink.url}}" /></div>
+	<div class="large-2 columns small-3"><img src="{{user_profile.profilePictureLink.url}}"/></div>
 	<div class="large-10 columns">
 	  <p><strong>{{each_post.author}}:</strong> {{each_post.content}}</p>
 	  {% if each_post.mainPicture %}
@@ -9,7 +9,7 @@
 	  {% endif %}
 	  {% if each_post.userPictures %}
 		<img src = '/media/{{each_post.userPictures}}' WIDTH='138' BORDER='1'><br>
-		{% endif %}
+	  {% endif %}
 	  <ul class="inline-list">
 	    <li><a href="">Reply</a></li>
 	    <li><a href="">Share</a></li>

@@ -5,7 +5,7 @@ import os
 
 def get_upload_path(instance, filename):
     return os.path.join(
-      "user_%d" % instance.user.id, filename)
+      "user_%s" % instance.user.username, filename)
 
 #===============================================================================
 # Brand

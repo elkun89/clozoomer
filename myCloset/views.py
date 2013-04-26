@@ -210,11 +210,15 @@ def editProfile(request):
             oldProfile.delete()
             newProfile.save()
             return HttpResponseRedirect('/')
+        else:
+            return HttpResponse('Data not valid!')
     else:
         form = ProfileForm(request.user, instance = oldProfile, initial = {})
-    return render(request, 'formTemplate.html', {
-            'form': form
-    })
+        url = '/editProfile/'
+        return render(request, 'new_form_template.html', {
+            'form': form,
+            'url' : url
+        })
 
 
 ##

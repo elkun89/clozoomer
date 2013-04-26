@@ -248,6 +248,22 @@ function request_friend_success(){
   window.location.hash = '#' + hashVal;
 }
 
+function edit_profile(){
+  clean();
+  $.ajax({
+    type: 'GET',
+    url: '/editProfile',
+    success: function(data) {
+      $("#main_board").html(data);
+    },
+    error: function(e) {
+      alert('error!');
+    }
+  });
+  var hashVal = 'edit_profile';
+  window.location.hash = '#' + hashVal;
+}
+
 $(document).ready(function(){
   var hash = window.location.hash.substr(1);
   if(hash){
@@ -270,6 +286,7 @@ $(document).ready(function(){
   $('#show_requests').click(show_friend_request);
   $('#add_followers').click(request_friend);
   $('#top_bar').click(show_livefeed);
+  $('#edit_profile_id').click(edit_profile);
 });
 
 </script>
@@ -349,7 +366,7 @@ $(document).ready(function(){
         <h5><a href="#">{{thisProfile.first_name}} {{thisProfile.last_name}}</a></h5>
           <div class="section-container vertical-nav" data-section data-options="deep_linking: false; one_up: true">
           <section class="section">
-            <h5 class="title"><a href="/editProfile">Edit Profile</a></h5>
+            <h5 class="title"><a id = "edit_profile_id" href="#edit_profile">Edit Profile</a></h5>
           </section>
           <section class="section">
             <h5 class="title"><a href="#">Section 2</a></h5>
