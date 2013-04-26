@@ -153,14 +153,14 @@ def getApparelType(request, idNum):
 #===============================================================================
 @login_required
 def listApparel(request):
-    template = loader.get_template('index.html')
+    template = loader.get_template('list_apparel.html')
     
     usrCategories = Category.objects.filter(author=request.user);
     usrApparel = ApparelInstance.objects.filter(owner=request.user);
     apparelType = ApparelType.objects.all();
     apparelLocation = Location.objects.all();
     thisUser = request.user;
-    context = Context({  # Map the examples in HTML to the examples variable
+    context = Context({
                                                                         'usrCategories' : usrCategories,
                                                                         'usrApparel' : usrApparel,
                                                                         'apparelType' : apparelType,
@@ -236,8 +236,13 @@ def showPosts(request):
         posts = Post.objects.filter(author = user_profile.user)
         for post in posts:
             user_posts.append(post);
-    serializer = PostSerializer(user_posts);
-    return Response(serializer.data);
+    
+    template = loader.get_template('show_posts.html')
+    context = Context({
+                                                                        'user_posts':user_posts,
+                                                                        'user_profile':uprofile,
+    })
+    return HttpResponse(template.render(context))
 
 ##
 # function to create posts

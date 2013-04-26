@@ -1,0 +1,6 @@
+{% for a in usrApparel %}
+	Name : {{a.type.name}} <br>
+	Time Added to Closet: {{a.timeOfCreation}} <br> 
+	Image: <img src = "/media/{{a.type.pictureLink}}" WIDTH="150" BORDER="1"> <br><br>
+ 	<a class = "small button" href="/deleteApparelInstance/{{a.id}}/">delete</a><br>
+{% endfor %}

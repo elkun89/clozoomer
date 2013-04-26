@@ -30,20 +30,8 @@ function show_livefeed(){
     $.ajax({
     type: 'GET',
     url: '/getPosts',
-    contentType: "application/json",
     success: function(data) {
-      var insert = 'Posts: <br>';
-      for (var i = 0; i < data.length; i++) {
-          insert = insert + data[i].author + ": " + data[i].content + "<br>";
-          if(data[i].mainPicture){
-            insert = insert + "<img src = '/media/" + data[i].mainPicture + "' WIDTH='138' BORDER='1'><br>";
-          }
-          else if(data[i].userPictures){
-            insert = insert + "<img src = '/media/" + data[i].userPictures + "' WIDTH='138' BORDER='1'>" + "<br>";
-          }
-          insert = insert + '<a class = "button" href="/deletePost/' + data[i].id + '">delete</a><br>';
-      }
-      $("#main_board").html(insert);
+      $("#main_board").html(data);
     },
     error: function(e) {
       alert('error!');
@@ -151,13 +139,16 @@ function profile_request(){
 
 function apparel_nojson_request(){
   clean();
-  var clear = '';
-  $("#main_board").html(clear);
-  var insert = '{% for a in usrApparel %}Name : {{a.type.name}} <br>Time Added to Closet: {{a.timeOfCreation}} <br> Image: ';
-  insert = insert + '<img src = "/media/{{a.type.pictureLink}}" WIDTH="150" BORDER="1"> <br><br>';
-  insert = insert + '<a class = "button" href="/deleteApparelInstance/{{a.id}}/">delete</a><br>';
-  insert = insert + '{% endfor %}';
-  $("#main_board").html(insert);
+  $.ajax({
+    type: 'GET',
+    url: 'listApparelInstance',
+    success: function(data) {
+      $("#main_board").html(data);
+    },
+    error: function(e) {
+      alert(e);
+    }
+  });
   var hashVal = 'apparel_nojson_request';
   window.location.hash = '#' + hashVal;
 }
@@ -261,7 +252,12 @@ $(document).ready(function(){
   var hash = window.location.hash.substr(1);
   if(hash){
     var func = window[hash];
-    func();
+    try{
+      func();
+    }
+    catch(err){
+      show_livefeed();
+    }
   }
   else{
     show_livefeed();
@@ -289,7 +285,7 @@ $(document).ready(function(){
 		      <h1><a id = "top_bar" href="#show_lifefeed">Clozoom</a></h1>
 		    </li>
 		    <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-		    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+		    <li class="toggle-topbar menu-icon"><a href="#show_lifefeed"><span>Menu</span></a></li>
 		  </ul>
 
 		  <section class="top-bar-section">
@@ -334,29 +330,45 @@ $(document).ready(function(){
     <!-- Main Content Section -->
     <!-- This has been source ordered to come first in the markup (and on small devices) but to be to the right of the nav on larger screens -->
     <div class="large-9 push-3 columns">
+      <section id="main_content">
         <div id = "post_bar">
         </div>
         <div id = "add_apparel_bar">
         </div>
         <div id = "main_board" >
         </div>
+      </section>
     </div>
     
     
     <!-- Nav Sidebar -->
     <!-- This is source ordered to be pulled to the left on larger screens -->
     <div class="large-3 pull-9 columns">
-        
-      <div id = "leftpart">
-      <section id="profilepic_section">
-        <div id = 'profilepic_photo'>
-          <img src = "{{thisProfile.profilePictureLink.url}}" HEIGHT="145" WIDTH="145" BORDER="1">
+      <div class="panel">
+        <a href="#"><img src = "{{thisProfile.profilePictureLink.url}}" HEIGHT="145" WIDTH="145" BORDER="1"></a>
+        <h5><a href="#">{{thisProfile.first_name}} {{thisProfile.last_name}}</a></h5>
+          <div class="section-container vertical-nav" data-section data-options="deep_linking: false; one_up: true">
+          <section class="section">
+            <h5 class="title"><a href="/editProfile">Edit Profile</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 2</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 3</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 4</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 5</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 6</a></h5>
+          </section>
         </div>
-        <p>{{thisUser.first_name}} {{thisUser.last_name}}</p>
-        <br><br>
-        <p><a class = "button" id ="edit" href="/editProfile">Edit Profile</a></p>
-        <br><br>
-      </section>
+
+      </div>
     
       <section id="sidebar">
       </section>

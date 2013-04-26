@@ -1,11 +1,20 @@
-
-{% for each_post in posts%}
-	{{post.author}} : {{post.content}} <br>
-	{% if post.mainPicture %}
-		<img src = '/media/{{post.mainPicture}}' WIDTH='138' BORDER='1'><br>
-	{% endif %}
-	{% if post.userPictures %}
-		<img src = '/media/{{post.userPictures}}' WIDTH='138' BORDER='1'><br>
-	{% endif %}
-	<a class = "button" href="/deletePost/{{post.id}}">delete</a><br>
+{% for each_post in user_posts%}
+<hr>
+<div class="row">
+	<div class="large-2 columns small-3"><img src="{{user_profile.profilePictureLink.url}}" /></div>
+	<div class="large-10 columns">
+	  <p><strong>{{each_post.author}}:</strong> {{each_post.content}}</p>
+	  {% if each_post.mainPicture %}
+		<img src = '/media/{{each_post.mainPicture}}' WIDTH='138' BORDER='1'><br>
+	  {% endif %}
+	  {% if each_post.userPictures %}
+		<img src = '/media/{{each_post.userPictures}}' WIDTH='138' BORDER='1'><br>
+		{% endif %}
+	  <ul class="inline-list">
+	    <li><a href="">Reply</a></li>
+	    <li><a href="">Share</a></li>
+	    <li><a href="/deletePost/{{each_post.id}}">Delete</a></li>
+	  </ul>
+	</div>
+</div>
 {% endfor %}
