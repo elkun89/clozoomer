@@ -160,6 +160,8 @@ LOGGING = {
     }
 }
 
+LOGIN_REDIRECT_URL = '/'
+
 # Parse database configuration from $DATABASE_URL
 #import dj_database_url
 #DATABASES['default'] =  dj_database_url.config()              # Or path to database file if using sqlite3.

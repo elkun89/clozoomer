@@ -197,7 +197,7 @@ def getFriends(request):
     return Response(serializer.data)
 
 #===============================================================================
-# function to get the friends of a certain user
+# functions to get and to edit profiles
 # @param request: the http request sent by the user
 #===============================================================================
 @api_view(['GET'])
@@ -205,6 +205,9 @@ def getProfile(request):
     uprofile = UserProfile.objects.get(user = request.user)
     serializer = UserProfileSerializer(uprofile)
     return Response(serializer.data)
+##
+# function to edit profile
+# @param request: the http request sent by the user
 
 @login_required
 def editProfile(request):
@@ -215,6 +218,9 @@ def editProfile(request):
             newProfile = form.save(commit = False)
             newProfile.user = request.user
             newProfile.username = request.user.username
+            new_picture_link = form.cleaned_data['profilePictureLink']
+            if not new_picture_link:
+                newProfile.profilePictureLink = oldProfile.profilePictureLink
             oldProfile.delete()
             newProfile.save()
             return HttpResponseRedirect('/')
@@ -233,20 +239,19 @@ def editProfile(request):
 def showPosts(request):
     uprofile = UserProfile.objects.get(user = request.user)
     ufriends = UserProfile.objects.filter(id__in = uprofile.friends.all())
-    userPosts = list()
+    user_posts = list()
+    user_profile_list = list(ufriends)
+    user_profile_list.append(uprofile)
 
-    if len(ufriends) == 0:
+    if not user_profile_list:
         return Response('');
     
-    for user in ufriends:
-        posts = Post.objects.filter(author = user)
-        if len(posts) == 0:
-            return Response('');
-        else:
-            for post in posts:
-                userPosts.append(post);
-                serializer = PostSerializer(userPosts);
-            return Response(serializer.data);
+    for user_profile in user_profile_list:
+        posts = Post.objects.filter(author = user_profile.user)
+        for post in posts:
+            user_posts.append(post);
+    serializer = PostSerializer(user_posts);
+    return Response(serializer.data);
 
 #===============================================================================
 # function to create posts
@@ -254,25 +259,51 @@ def showPosts(request):
 #===============================================================================
 @login_required
 def createPost(request):
-    #oldPost = Post.objects.get(author = request.user)
-    #if request.method == 'POST':                                    #process the information if the request is post
+    if request.method == 'POST':                                    #process the information if the request is post
         form = PostForm(request.user, request.POST, request.FILES)
         if form.is_valid():
             newPost = form.save(commit = False)
             newPost.author = request.user
             newPost.save()
-            return HttpResponseRedirect('/')
-    #else:
-    #    form = PostForm(request.user, instance = oldPost, initial = {})
-        return render(request, 'formTemplate.html', {
+        return HttpResponseRedirect('/#show_livefeed')
+    else:
+        form = PostForm(request.user)
+        return render(request, 'new_post_form.html', {
             'form': form
     })
+        
+#===============================================================================
+# function to add apparel instances
+# @param request: the http request sent by the user
+#===============================================================================
+@login_required
+def add_apparel_instance(request):
+    if request.method == 'POST':                                    #process the information if the request is post
+        form = InstanceForm(request.POST)
+        if form.is_valid():
+            newInstance = ApparelInstance()
+            newInstance.category = form.cleaned_data['categories']
+            newInstance.owner = request.user
+            cleaned_barcode = form.cleaned_data['barcode']
+            newInstance.type = ApparelType.objects.get(barcode = cleaned_barcode)
+            newInstance.save()
+            return HttpResponseRedirect('/#apparel_nojson_request')
+        else:
+            return HttpResponse("Form data not valid!")
+    else:
+        form = InstanceForm()
+        #form.fields['type'].widget = forms.HiddenInput()
+        return render(request, 'new_apparel_form.html', {
+            'form': form
+    })
+
 
 
 #===============================================================================
 # function to display own posts in closet
 # @param request: the http request sent by the user
 #===============================================================================
+@login_required
 @api_view(['GET'])
 def displayCloset(request):
     uprofile = UserProfile.objects.get(user = request.user)
@@ -287,3 +318,39 @@ def displayCloset(request):
             serializer = PostSerializer(userPosts);
             
         return Response(serializer.data);
+
+##
+# function to delete apparel instances
+# @param request: the http request from the user
+# @param idNum: the id of the apparel instance to be deleted
+ 
+def delete_apparel_instance(request, idNum):
+    try:
+        apparel_to_delete = ApparelInstance.objects.get(id = idNum)
+        apparel_to_delete.delete()
+        return HttpResponseRedirect("/#apparel_nojson_request")
+    except:
+        return HttpResponse("Deletion failed: object not found!")
+    
+##
+# function to delete posts
+# @param request: http request from the user
+# @param idNum: the id of the post to be deleted
+
+@login_required
+def delete_post(request, idNum):
+    try:
+        post_to_delete = Post.objects.get(id = idNum)
+        if request.user == post_to_delete.author: 
+            post_to_delete.delete()
+            return HttpResponseRedirect("/#show_livefeed")
+        else:
+            return HttpResponse("Deletion failed: you don't own this post!")
+    except:
+        return HttpResponse("Deletion failed: object not found!")
+
+
+
+
+
+

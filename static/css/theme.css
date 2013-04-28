@@ -49,6 +49,7 @@ font-size:12px;
    background: #1b435e;
    }
 
+<<<<<<< HEAD
 #top{
 width:80%;
 margin: auto;
@@ -57,13 +58,25 @@ background: #FF3300
    
 #bottomleft{
 float: left;
+=======
+#leftpart{
+>>>>>>> 2bd26f492302b38ffb4478074e8157aaa5c2de6d
 padding:5px;
+float: left;
+margin-left: 15%;
+margin-top: 1%;
 width: 145px;
+height:800px;
 background: #F0F8FF
 }
 
+<<<<<<< HEAD
 #bottomright{
 margin:0px 0px 0px 155px;
+=======
+#rightpart{
+margin:0px 0px 0px 0px;
+>>>>>>> 2bd26f492302b38ffb4478074e8157aaa5c2de6d
 padding:5px;
 background:#222;
 }
@@ -78,6 +91,17 @@ padding:5px 5px;
 
 #username{
 
+<<<<<<< HEAD
+=======
+#main_content{
+margin-left: 27%;
+margin-right: 15%;
+padding:20px;
+width:55%;
+min-height:800px;
+background:#eee;
+line-height:3em;
+>>>>>>> 2bd26f492302b38ffb4478074e8157aaa5c2de6d
 }
 
 #edit{

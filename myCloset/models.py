@@ -23,22 +23,22 @@ class ApparelType(models.Model):
     name = models.CharField(max_length = 50)
     price = models.FloatField()
     attribute = models.CharField(max_length = 50)
-    pictureLink = models.CharField(max_length = 200)
+    pictureLink = models.ImageField(upload_to = 'apparel_types', blank = True)
     brand = models.ForeignKey(Brand)
     def __unicode__(self):
         return self.name+'('+self.brand.name+')'
     
-#===============================================================================
+#===========================
 # Apparel Instance
 #===============================================================================
 class ApparelInstance(models.Model):
     type = models.ForeignKey(ApparelType)
     timeOfCreation = models.DateTimeField(auto_now_add=True)
-    locationOfPurchase = models.ForeignKey('Location')
+    #locationOfPurchase = models.ForeignKey('Location')
     owner = models.ForeignKey(User, related_name='apparels')
     categories = models.ManyToManyField('Category', blank = True)
     def __unicode__(self):
-        return self.name+'('+self.author.username+')'
+        return self.type.name+'('+self.owner.username+')'
     
 
 #===============================================================================
