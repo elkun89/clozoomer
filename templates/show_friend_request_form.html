@@ -1,0 +1,16 @@
+<section>
+{% for each_friend_request in friend_requests %}
+	<div class="formWrapper">
+	<div class="fontModification">
+		<!-- Note's Title and Information Box -->
+		{{each_friend_request.requester.username}} wants to add you as a friend.<br>
+		Message: {{each_friend_request.message}}
+		<form action = "{{url}}" method="post" class="generalText">{% csrf_token %}
+			<input type = "hidden" name = "requester" id = "id_requester" value = "{{each_friend_request.requester.id}}">
+			{{ form.response }}
+			<input type="submit" value="Submit" />
+		</form>
+		</div>
+	</div>
+{% endfor %}
+</section>

@@ -1,359 +1,453 @@
 <!DOCTYPE html>
-
-<html lang="en">
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 {% load staticfiles %}
-	<head>
-		<title>Clozoom</title>
-		<meta charset="utf-8">
-		<link rel="stylesheet" href="{% static "css/theme.css" %}" type="text/css" media="screen"/>
-		<script src="{% static "js/jquery.js" %}"></script>
-		<!-- <script src="{% static "js/functions.js" %}" ></script> -->
-		<script src="{% static "js/highlight.js" %}"></script>
-		<!-- Author: Kun Peng -->
-	</head>
+<head>
+	<meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Clozoom</title>
+
+  <link rel="stylesheet" href="{% static "css/normalize.css" %}"/>
+  <link rel="stylesheet" href="{% static "css/theme.css" %}" type="text/css" media="screen"/>
+  <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
+
+  <script src="{% static "js/jquery.js" %}"></script>
+  <script src="{% static "js/highlight.js" %}"></script>
+  <script src="{% static "js/vendor/custom.modernizr.js" %}"></script>
+
+</head>
 
 <script>
 
 function clean(){
-	$("#main_board").html("");
-	$("#add_apparel_bar").html("");
-	$("#post_bar").html("");
+  $("#main_board").html("");
+  $("#add_apparel_bar").html("");
+  $("#post_bar").html("");
 }
 
 function show_livefeed(){
-		clean();
-		$.ajax({
-		type: 'GET',
-		url: '/getPosts',
-		contentType: "application/json",
-		success: function(data) {
-			var insert = 'Posts: <br>';
-			for (var i = 0; i < data.length; i++) {
-			    insert = insert + data[i].author + ": " + data[i].content + "<br>";
-			    if(data[i].mainPicture){
-			    	insert = insert + "<img src = '/media/" + data[i].mainPicture + "' WIDTH='138' BORDER='1'><br>";
-			    }
-			    else if(data[i].userPictures){
-			    	insert = insert + "<img src = '/media/" + data[i].userPictures + "' WIDTH='138' BORDER='1'>" + "<br>";
-			    }
-			    insert = insert + '<a class = "button" href="/deletePost/' + data[i].id + '">delete</a><br>';
-			}
-			$("#main_board").html(insert);
-		},
-		error: function(e) {
-			alert('error!');
-		}
-	});
-	var hashVal = 'show_livefeed';
-	window.location.hash = '#' + hashVal;
+    clean();
+    $.ajax({
+    type: 'GET',
+    url: '/getPosts',
+    success: function(data) {
+      $("#main_board").html(data);
+    },
+    error: function(e) {
+      alert('error!');
+    }
+  });
+  var hashVal = 'show_livefeed';
+  window.location.hash = '#' + hashVal;
 };
 
-function getTypeData(id){	
-	var insert = "";
-	var apparelData;
-	$.ajax({
-		type: 'GET',
-		url: '/getApparelType/' + id + '/',
-		async : false,
-		contentType: "application/json",
-		success: function(data) {
-			apparelData = data;
-			// insert = insert + "Name: " + apparelName + "<br>";
-			// $("#apparelType").append(insert);
-		},
-		error: function(e) {
-			alert('error!');
-		}
-	});
-	return apparelData;
+function getTypeData(id){ 
+  var insert = "";
+  var apparelData;
+  $.ajax({
+    type: 'GET',
+    url: '/getApparelType/' + id + '/',
+    async : false,
+    contentType: "application/json",
+    success: function(data) {
+      apparelData = data;
+      // insert = insert + "Name: " + apparelName + "<br>";
+      // $("#apparelType").append(insert);
+    },
+    error: function(e) {
+      alert('error!');
+    }
+  });
+  return apparelData;
 };
 
-function getLocationName(id){	
-	var insert = "";
-	var locationName;
-	$.ajax({
-		type: 'GET',
-		url: 'rest/locations/' + id + '/',
-		async : false,
-		contentType: "application/json",
-		success: function(data) {
-			locationName = data.address;
-		},
-		error: function(e) {
-		}
-	});
-	return locationName;
+function getLocationName(id){ 
+  var insert = "";
+  var locationName;
+  $.ajax({
+    type: 'GET',
+    url: 'rest/locations/' + id + '/',
+    async : false,
+    contentType: "application/json",
+    success: function(data) {
+      locationName = data.address;
+    },
+    error: function(e) {
+    }
+  });
+  return locationName;
 };
-
-// function apparel_request(){
-// 	var clear = '';
-// 	$("#main_board").html(clear);
-// 	$.ajax({
-// 		type: 'GET',
-// 		url: '/apparel',
-// 		contentType: "application/json",
-// 		success: function(data) {
-// 			var apparelName;
-// 			var locationName;
-// 			var insert = "List of User's Apparel: <br>";
-// 			for (var i = 0; i < data.length; i++) {
-// 				apparelName = getTypeData(data[i].type).name;
-// 				locationName = getLocationName(data[i].locationOfPurchase);	
-// 				insert = insert + "Name: " + apparelName + "<br>";
-// 			    insert = insert + "Purchase Time: " + data[i].timeOfCreation + "<br>";
-// 			    insert = insert + "Location: " + locationName + "<br>";
-
-// 			    // $("#apparel").append($("apparelType"), $(apparelInstance));
-// 			    // $("#apparelType").clear;
-// 			    // $("#apparelInstance").clear;
-// 			}
-// 			$("#main_board").html(insert);
-// 		},
-// 		error: function(e) {
-// 		}
-// 	});
-// };
 
 function category_request(){
-	$.ajax({
-		type: 'GET',
-		url: '/categories',
-		contentType: "application/json",
-		success: function(data) {
-			var insert = '';
-			for (var i = 0; i < data.length; i++) {
-			    insert = insert + data[i].name + "<br>";
-			}
-			$("#categories").html(insert);
-		},
-		error: function(e) {
-		}
-	});
+  $.ajax({
+    type: 'GET',
+    url: '/categories',
+    contentType: "application/json",
+    success: function(data) {
+      var insert = '';
+      for (var i = 0; i < data.length; i++) {
+          insert = insert + data[i].name + "<br>";
+      }
+      $("#categories").html(insert);
+    },
+    error: function(e) {
+    }
+  });
 };
 
 function friends_request(){
-	clean();
-	var clear = '';
-	$("#main_board").html(clear);
-	$.ajax({
-		type: 'GET',
-		url: '/getFriends',
-		contentType: "application/json",
-		success: function(data) {
-			var insert = 'Friends: <br>';
-			for (var i = 0; i < data.length; i++) {
-			    insert = insert + "Name: " + data[i].first_name + " " + data[i].last_name + "<br>";
-			    insert = insert + "Email: " + data[i].email + "<br>";
-			}
-			$("#main_board").html(insert);
-		},
-		error: function(e) {
-			alert('error!');
-		}
-	});
-	var hashVal = 'friends_request';
-	window.location.hash = '#' + hashVal;
+  clean();
+  var clear = '';
+  $("#main_board").html(clear);
+  $.ajax({
+    type: 'GET',
+    url: '/getFriends',
+    contentType: "application/json",
+    success: function(data) {
+      var insert = 'Friends: <br>';
+      for (var i = 0; i < data.length; i++) {
+          insert = insert + "Name: " + data[i].first_name + " " + data[i].last_name + "<br>";
+          insert = insert + "Email: " + data[i].email + "<br>";
+      }
+      $("#main_board").html(insert);
+    },
+    error: function(e) {
+      alert('error!');
+    }
+  });
+  var hashVal = 'friends_request';
+  window.location.hash = '#' + hashVal;
 };
 
 function profile_request(){
-	$.ajax({
-		type: 'GET',
-		url: '/userProfile',
-		contentType: "application/json",
-		success: function(data) {
-			var insert = 'Profile: <br>';
-			for (var i = 0; i < data.length; i++) {
-			    insert = insert + "Username: " + data[i].username + "<br>";
-			    insert = insert + "Email: " + data[i].email + "<br>";
-			}
-			$("#profile").html(insert);
-		},
-		error: function(e) {
-		}
-	});
+  $.ajax({
+    type: 'GET',
+    url: '/userProfile',
+    contentType: "application/json",
+    success: function(data) {
+      var insert = 'Profile: <br>';
+      for (var i = 0; i < data.length; i++) {
+          insert = insert + "Username: " + data[i].username + "<br>";
+          insert = insert + "Email: " + data[i].email + "<br>";
+      }
+      $("#profile").html(insert);
+    },
+    error: function(e) {
+    }
+  });
 }
 
 function apparel_nojson_request(){
-	clean();
-	var clear = '';
-	$("#main_board").html(clear);
-	var insert = '{% for a in usrApparel %}Name : {{a.type.name}} <br>Time Added to Closet: {{a.timeOfCreation}} <br> Image: ';
-	insert = insert + '<img src = "/media/{{a.type.pictureLink}}" WIDTH="150" BORDER="1"> <br><br>';
-	insert = insert + '<a class = "button" href="/deleteApparelInstance/{{a.id}}/">delete</a><br>';
-	insert = insert + '{% endfor %}';
-	$("#main_board").html(insert);
-	var hashVal = 'apparel_nojson_request';
-	window.location.hash = '#' + hashVal;
+  clean();
+  $.ajax({
+    type: 'GET',
+    url: 'listApparelInstance',
+    success: function(data) {
+      $("#main_board").html(data);
+    },
+    error: function(e) {
+      alert(e);
+    }
+  });
+  var hashVal = 'apparel_nojson_request';
+  window.location.hash = '#' + hashVal;
 }
 
 function show_profilepic(){
-	var clear = '';
-	$("#profilepic_photo").html(clear);
+  var clear = '';
+  $("#profilepic_photo").html(clear);
 
-	$.ajax({
-		type: 'GET',
-		url: 'getFriends',
-		contentType: "application/json",
-		success: function(data) {
-			alert(data[0].email);
-			var insert = '';
-			insert = insert + '<img src = "../static/images/';
-			insert = insert + data[0].profilePictureLink;
-			insert = insert + '" HEIGHT="200" WIDTH="138" BORDER="1">';
-			$("#profilepic_photo").html(insert);
-		},
-		error: function(e) {
-			alert(e);
-		}
-	});
+  $.ajax({
+    type: 'GET',
+    url: 'getFriends',
+    contentType: "application/json",
+    success: function(data) {
+      alert(data[0].email);
+      var insert = '';
+      insert = insert + '<img src = "../static/images/';
+      insert = insert + data[0].profilePictureLink;
+      insert = insert + '" HEIGHT="200" WIDTH="138" BORDER="1">';
+      $("#profilepic_photo").html(insert);
+    },
+    error: function(e) {
+      alert(e);
+    }
+  });
 }
 
-// function show_closet(){
-// 		$.ajax({
-// 		type: 'GET',
-// 		url: '/getCloset',
-// 		contentType: "application/json",
-// 		success: function(data) {
-// 			var insert = 'My Closet: <br>';
-// 			for (var i = 0; i < data.length; i++) {
-// 			    insert = insert + data[i].author + ": ";
-// 			    if(data[i].mainPicture){
-// 					insert = insert + "<img src = '/media/" + data[i].mainPicture + "' HEIGHT='200' WIDTH='138' BORDER='1'>";
-// 				}
-// 				else if(data[i].userPictures){
-// 					insert = insert + "<img src = '/media/" + data[i].userPictures + "' HEIGHT='200' WIDTH='138' BORDER='1'>" + "<br>";
-// 				}
-// 			}
-// 			$("#main_board").html(insert);
-// 		},
-// 		error: function(e) {
-// 			alert('error!');
-// 		}
-// 	});
-// };
-
 function create_post(){
-	clean();
-	$.ajax({
-		type: 'GET',
-		url: '/newPost',
-		success: function(data) {
-			$("#post_bar").html(data);
-		},
-		error: function(e) {
-			alert('error!');
-		}
-	});
-	show_livefeed();
-	var hashVal = 'create_post';
-	window.location.hash = '#' + hashVal;
+  clean();
+  $.ajax({
+    type: 'GET',
+    url: '/newPost',
+    success: function(data) {
+      $("#post_bar").html(data);
+    },
+    error: function(e) {
+      alert('error!');
+    }
+  });
+  show_livefeed();
+  var hashVal = 'create_post';
+  window.location.hash = '#' + hashVal;
 };
 
 function add_apparel(){
-	clean();
-	$.ajax({
-		type: 'GET',
-		url: '/addApparelInstance',
-		success: function(data) {
-			$("#add_apparel_bar").html(data);
-		},
-		error: function(e) {
-			alert('error!');
-		}
-	});
-	apparel_nojson_request();
-	var hashVal = 'add_apparel';
-	window.location.hash = '#' + hashVal;
+  clean();
+  $.ajax({
+    type: 'GET',
+    url: '/addApparelInstance',
+    success: function(data) {
+      $("#add_apparel_bar").html(data);
+    },
+    error: function(e) {
+      alert('error!');
+    }
+  });
+  apparel_nojson_request();
+  var hashVal = 'add_apparel';
+  window.location.hash = '#' + hashVal;
 };
 
+function show_friend_request(){
+  clean();
+  $.ajax({
+    type: 'GET',
+    url: '/showFriendRequest',
+    success: function(data) {
+      $("#main_board").html(data);
+    },
+    error: function(e) {
+      alert('error!');
+    }
+  });
+  var hashVal = 'show_friend_request';
+  window.location.hash = '#' + hashVal;
+}
+
+function request_friend(){
+  clean();
+  $.ajax({
+    type: 'GET',
+    url: '/requestFriend',
+    success: function(data) {
+      $("#main_board").html(data);
+    },
+    error: function(e) {
+      alert('error!');
+    }
+  });
+  var hashVal = 'request_friend';
+  window.location.hash = '#' + hashVal;
+}
+
+function request_friend_success(){
+  clean();
+  $("#main_board").html("message sent");
+  var hashVal = 'request_friend_success';
+  window.location.hash = '#' + hashVal;
+}
+
+function edit_profile(){
+  clean();
+  $.ajax({
+    type: 'GET',
+    url: '/editProfile',
+    success: function(data) {
+      $("#main_board").html(data);
+    },
+    error: function(e) {
+      alert('error!');
+    }
+  });
+  var hashVal = 'edit_profile';
+  window.location.hash = '#' + hashVal;
+}
+
 $(document).ready(function(){
-	var hash = window.location.hash.substr(1);
-	if(hash){
-		var func = window[hash];
-		func();
-	}
-	else{
-		show_livefeed();
-	}
+  var hash = window.location.hash.substr(1);
+  if(hash){
+    var func = window[hash];
+    try{
+      func();
+    }
+    catch(err){
+      show_livefeed();
+    }
+  }
+  else{
+    show_livefeed();
+  }
+  $('#stream').click(show_livefeed);
+  $('#new_post').click(create_post);
+  $('#closet').click(apparel_nojson_request);
+  $('#new_apparel').click(add_apparel);
+  $('#followers').click(friends_request);
+  $('#show_requests').click(show_friend_request);
+  $('#add_followers').click(request_friend);
+  $('#top_bar').click(show_livefeed);
+  $('#edit_profile_id').click(edit_profile);
 });
 
 </script>
 
-	<body>
-		<div id = "top">
-			<div id = "profile">
-				<div id = 'profilepic_photo'>
-					<img src = "{{thisProfile.profilePictureLink.url}}" HEIGHT="145" WIDTH="145" BORDER="1">
-					<!-- <img src = "{{thisProfile.profilePictureLink}}"> -->
-				</div>
-<<<<<<< HEAD
-				<p id = 'username'>{{thisUser.first_name}} {{thisUser.last_name}}</p>
-				<p><a class = "button" id ="edit" href="/editProfile">Edit Profile</a></p>
-			</div>
-			<div id = "menu">
-				<menu id = "thumbnails">
-                    <ul>
-=======
-				<p>{{thisUser.first_name}} {{thisUser.last_name}}</p>
-				<br><br>
-				<p><a class = "button" id ="edit" href="/editProfile">Edit Profile</a></p>
-				<br><br>
-			</section>
-		
-			<section id="sidebar">
-				<h4>Current Trends</h4>
-				<p> XXX </p>
-				<p> XXX </p>
-				<p> XXX </p>
-				<br />
-				<br />
-				<br />
-				<h4>Followed Trends</h4>
-				<p> XXX </p>
-				<p> XXX </p>
-				<p> XXX </p>
-			</section>
-		</div>
-		
-		<div id = "rightpart">
-			<section id="main_content">
-				<div id = "thumbnail_block">
-					<menu id = "thumbnails">
-                                            <ul>
->>>>>>> 2bd26f492302b38ffb4478074e8157aaa5c2de6d
-						<li><input class = "button" type="button" onclick="show_livefeed();" value="Stream" /></li>
-						<li><input class = "button" type="button" onclick="apparel_nojson_request();" value="Closet" /></li>
-						<li><input class = "button" type="button" onclick="friends_request();" value="Followers" /></li>
-						<li><input class = "button" type="button" onclick="create_post();" value="New Post" /></li>
-						<li><input class = "button" type="button" onclick="add_apparel();" value="Add Apparel" /></li>
-						<li><a class = "button" href="/accounts/logout/">Log Out</a></li>
-<<<<<<< HEAD
-                    </ul>
-			</div>
-		</div>
-		
-		<div id = "bottomleft">
-			<div id="sidebar">
-				<h4>Suggestions</h4>
-			</div>
-		</div>
-		
-		<div id = "bottomright">
-			<div id="main_content">
-				<div id = "main_board" >
-=======
-                                            </ul>
-                    </menu>
-				</div>
-				<div id = "post_bar">
-				</div>
-				<div id = "add_apparel_bar">
->>>>>>> 2bd26f492302b38ffb4478074e8157aaa5c2de6d
-				</div>
-				<div id = "main_board" >
-				</div>
-			</div>
-		</div>
-	</body>
-</html>
+<body>
 
+<!-- Header and Nav -->
+<div class = "contain-to-grid">
+		<nav class="top-bar">
+		  <ul class="title-area">
+		    <!-- Title Area -->
+		    <li class="name">
+		      <h1><a id = "top_bar" href="#show_lifefeed">Clozoom</a></h1>
+		    </li>
+		    <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+		    <li class="toggle-topbar menu-icon"><a href="#show_lifefeed"><span>Menu</span></a></li>
+		  </ul>
+
+		  <section class="top-bar-section">
+		    <!-- Left Nav Section -->
+		    <ul class="left">
+		      <li class="divider"></li>
+		    </ul>
+
+		    <!-- Right Nav Section -->
+		    <ul class="right">
+		    	<li class="divider"></li>
+		      <li class="has-dropdown"><a id = "stream" href="#show_lifefeed">Stream</a>
+		      	<ul class="dropdown">
+		          <li class="active"><a id = "new_post"href="#create_post" class="">New Post</a></li>
+		        </ul>
+		      </li>
+		      <li class="divider"></li>
+		      <li class="has-dropdown"><a id = "closet" href="#apparel_nojson_request">Closet</a>
+		      	<ul class="dropdown">
+		          <li class="active"><a id = "new_apparel" href="#add_apparel" class="">Add Apparel</a></li>
+		        </ul>
+		      </li>
+		      <li class="divider"></li>
+		      <li class="has-dropdown"><a id = "followers" href="#friends_request">Followers</a>
+		        <ul class="dropdown">
+		          <li class="active"><a id = "show_requests" href="#show_friend_request" class="">Show Requests</a>
+		          <li class="active"><a id = "add_followers" href="#request_friend" class="">Add Followers</a>
+		        </ul>
+		      </li>
+		      <li class="divider"></li>
+		      <li class="active"><a href="/accounts/logout/">Log Out</a></li>
+		      <li class="divider"></li>
+		    </ul>
+		  </section>
+		</nav>
+</div>
+  <!-- End Header and Nav -->
+  
+  
+  <div class="row">    
+    
+    <!-- Main Content Section -->
+    <!-- This has been source ordered to come first in the markup (and on small devices) but to be to the right of the nav on larger screens -->
+    <div class="large-9 push-3 columns">
+      <section id="main_content">
+        <div id = "post_bar">
+        </div>
+        <div id = "add_apparel_bar">
+        </div>
+        <div id = "main_board" >
+        </div>
+      </section>
+    </div>
+    
+    
+    <!-- Nav Sidebar -->
+    <!-- This is source ordered to be pulled to the left on larger screens -->
+    <div class="large-3 pull-9 columns">
+      <div class="panel">
+        <ul class="clearing-thumbs" data-clearing>
+          <li><img src = "/media/{{thisProfile.profilePictureLink}}" HEIGHT="145" WIDTH="145" BORDER="1"></li>
+        </ul>
+        <h5><a href="#">{{thisProfile.first_name}} {{thisProfile.last_name}}</a></h5>
+          <div class="section-container vertical-nav" data-section data-options="deep_linking: false; one_up: true">
+          <section class="section">
+            <h5 class="title"><a id = "edit_profile_id" href="#edit_profile">Edit Profile</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 2</a></h5>
+          </section>
+        </div>
+
+      </div>
+    
+      <section id="sidebar">
+      </section>
+    </div>
+        
+    </div>
+    
+  </div>
+    
+  
+  <!-- Footer -->
+  
+  <footer class="row">
+    <div class="large-12 columns">
+      <hr />
+      <div class="row">
+        <div class="large-6 columns">
+          <p>&copy; Copyright no one at all. Go to town.</p>
+        </div>
+        <div class="large-6 columns">
+          <ul class="inline-list right">
+            <li><a href="#">Section 1</a></li>
+            <li><a href="#">Section 2</a></li>
+            <li><a href="#">Section 3</a></li>
+            <li><a href="#">Section 4</a></li>
+          </ul>
+        </div>
+      </div>
+    </div> 
+  </footer>
+
+  <script>
+    document.write('<script src= ' +
+    ('__proto__' in {} ? '{% static "js/vendor/zepto.js" %}>' : '{% static "js/vendor/jquery" %}>') +
+    '<\/script>')
+  </script>
+  
+  <script src="{% static "js/foundation.min.js" %}"></script>
+  <!--
+  
+  <script src="js/foundation/foundation.js"></script>
+  
+  <script src="js/foundation/foundation.alerts.js"></script>
+  
+  <script src="js/foundation/foundation.clearing.js"></script>
+  
+  <script src="js/foundation/foundation.cookie.js"></script>
+  
+  <script src="js/foundation/foundation.dropdown.js"></script>
+  
+  <script src="js/foundation/foundation.forms.js"></script>
+  
+  <script src="js/foundation/foundation.joyride.js"></script>
+  
+  <script src="js/foundation/foundation.magellan.js"></script>
+  
+  <script src="js/foundation/foundation.orbit.js"></script>
+  
+  <script src="js/foundation/foundation.placeholder.js"></script>
+  
+  <script src="js/foundation/foundation.reveal.js"></script>
+  
+  <script src="js/foundation/foundation.section.js"></script>
+  
+  <script src="js/foundation/foundation.tooltips.js"></script>
+  
+  <script src="js/foundation/foundation.topbar.js"></script>
+  
+  -->
+  
+  <script>
+    $(document).foundation();
+  </script>
+</body>
+</html>

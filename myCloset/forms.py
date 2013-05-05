@@ -1,8 +1,7 @@
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
-from myCloset.models import UserProfile, ApparelInstance, ApparelType
-from django.db.models import Q
+from myCloset.models import UserProfile, ApparelInstance, ApparelType, FriendRequest
 from myCloset.models import Post
 
 class UserForm(forms.Form):
@@ -47,12 +46,17 @@ class PostForm(ModelForm):
     class Meta:
         model = Post
         fields = ('content', 'mainPicture', 'userPictures')
+        widgets = {
+                   'content' : forms.Textarea,
+                   }
         
     #adding overridden initialization field, restrict categories to the ones with the user as the author    
     def __init__(self, user, *args, **kwargs):
         super(PostForm, self).__init__(*args, **kwargs)
 
-# form for adding new apparel instances
+## 
+#form for adding new apparel instances
+
 class InstanceForm(ModelForm):
     barcode = forms.CharField(max_length = 100)
     class Meta:
@@ -67,8 +71,23 @@ class InstanceForm(ModelForm):
         except:
             raise forms.ValidationError("The apparel you're trying to add isn't in the database!")
         return cleaned_data
+    
+##
+# Form for creating friend requests
+
+class FriendAddForm(ModelForm):
+    class Meta:
+        model = FriendRequest
+        fields = ('requested_user', 'message')
         
+    def __init__(self, this_user, *args, **kwargs):
+        super(FriendAddForm, self).__init__(*args, **kwargs)
+        self.fields['requested_user'].queryset = UserProfile.objects.exclude(user = this_user)
         
+class FriendConfirmForm(ModelForm):
+    class Meta:
+        model = FriendRequest
+        fields = ('response', 'requester')
         
         
         

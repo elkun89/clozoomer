@@ -3,7 +3,7 @@
 	<div class="formWrapper">
 	<div class="fontModification">
 		<!-- Note's Title and Information Box -->
-		<form action = "/newPost/" enctype="multipart/form-data" method="post" class="generalText">{% csrf_token %}
+		<form action = "{{url}}" enctype="multipart/form-data" method="post" class="generalText">{% csrf_token %}
 			{{ form.as_p }}
 			<input class = "small button" type="submit" value="Submit" />
 		</form>

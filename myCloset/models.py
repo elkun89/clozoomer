@@ -5,7 +5,7 @@ import os
 
 def get_upload_path(instance, filename):
     return os.path.join(
-      "user_%d" % instance.user.id, filename)
+      "user_%s" % instance.user.username, filename)
 
 #===============================================================================
 # Brand
@@ -37,6 +37,7 @@ class ApparelInstance(models.Model):
     #locationOfPurchase = models.ForeignKey('Location')
     owner = models.ForeignKey(User, related_name='apparels')
     categories = models.ManyToManyField('Category', blank = True)
+    is_shared = models.BooleanField()
     def __unicode__(self):
         return self.type.name+'('+self.owner.username+')'
     
@@ -112,4 +113,32 @@ class Post(models.Model):
     userPictures = models.ImageField(upload_to = 'users', blank = True)
     def __unicode__ (self):
         return self.content+'('+self.author.username+')'
+
+##
+# Model to hold requests sent by users to make friends
+# @param message: the message from the user making the request
+# @param requester: the user making the request
+# @param response: boolean value indicating whether the request is granted
+# @param processed: boolean value indicating whether the request is processed
+ 
+class FriendRequest(models.Model):
+    message = models.CharField(max_length = 500)
+    timeOfCreation = models.DateTimeField(auto_now_add=True, editable = False)
+    requester = models.ForeignKey(UserProfile)
+    requested_user = models.ForeignKey(UserProfile, related_name = 'user_requested')
+    response = models.BooleanField(blank = True)
+    processed = models.BooleanField(default = False)
+    
+    def __unicode__ (self):
+        return 'Request from ' + self.requester.username + ' to ' + self.requested_user.username
+
+
+
+
+
+
+
+
+
+
     
