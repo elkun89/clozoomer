@@ -387,6 +387,9 @@ def show_friend_request(request):
         'url' : url,
         'friend_requests' : friend_requests
     })
+
+##
+# function to process friend requests sent by other users
     
 def process_friend_request(request):
     user_profile = UserProfile.objects.get(user = request.user)
@@ -403,6 +406,26 @@ def process_friend_request(request):
                 each_responded_request.save()
             return HttpResponseRedirect("/#friends_request")
     return HttpResponse("Error in data!")
+
+##
+# function to carry out basic searching operation
+# @param request: the http request from the client
+
+def basic_search(request):
+    if request.method == 'GET':
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            #grab data from the form
+            text = form.cleaned_data['search']
+            template = loader.get_template('list_apparel_search_result.html')
+            apparelType = ApparelType.objects.filter(name__icontains = text);
+            context = Context({
+                                                                                'apparelType' : apparelType,
+            })
+            return HttpResponse(template.render(context))               
+    return HttpResponseRedirect('/')
+    
+    
                 
 
 

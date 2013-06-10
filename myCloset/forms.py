@@ -83,11 +83,21 @@ class FriendAddForm(ModelForm):
     def __init__(self, this_user, *args, **kwargs):
         super(FriendAddForm, self).__init__(*args, **kwargs)
         self.fields['requested_user'].queryset = UserProfile.objects.exclude(user = this_user)
+
+##
+# Form for searching friends
         
 class FriendConfirmForm(ModelForm):
     class Meta:
         model = FriendRequest
         fields = ('response', 'requester')
+        
+##
+# This is the search form
+# @param search This is what a user typed into the search bar
+
+class SearchForm(forms.Form):
+    search = forms.CharField(max_length = 150)
         
         
         

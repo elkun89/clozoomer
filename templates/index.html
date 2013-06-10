@@ -23,7 +23,7 @@ function clean(){
   $("#main_board").html("");
   $("#add_apparel_bar").html("");
   $("#post_bar").html("");
-}
+};
 
 function show_livefeed(){
     clean();
@@ -316,7 +316,7 @@ $(document).ready(function(){
 		    	<li class="divider"></li>
 		      <li class="has-dropdown"><a id = "stream" href="#show_lifefeed">Stream</a>
 		      	<ul class="dropdown">
-		          <li class="active"><a id = "new_post"href="#create_post" class="">New Post</a></li>
+		          <li class="active"><a id = "new_post" href="#create_post" class="">New Post</a></li>
 		        </ul>
 		      </li>
 		      <li class="divider"></li>
@@ -335,6 +335,18 @@ $(document).ready(function(){
 		      <li class="divider"></li>
 		      <li class="active"><a href="/accounts/logout/">Log Out</a></li>
 		      <li class="divider"></li>
+           <li class="has-form">
+            <form action = "/search" method = "get">{% csrf_token %}
+              <div class="row collapse">
+                <div class="small-8 columns">
+                  <input id = "id_search" type="text" name = "search" maxlength = "150"/>
+                </div>
+                <div class="small-4 columns">
+                  <input class = "button" type="submit" value="Search" />
+                </div>
+              </div>
+            </form>
+          </li>
 		    </ul>
 		  </section>
 		</nav>

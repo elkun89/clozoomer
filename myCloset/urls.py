@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^requestFriend/$', views.add_friend_request, name = 'add_friend_request'),
     url(r'^showFriendRequest/$', views.show_friend_request, name = 'show_friend_request'),
     url(r'^processFriendRequest/$', views.process_friend_request, name = 'process_friend_request'),
-    url(r'^listApparelInstance/$', views.listApparel, name = 'listApparel')
+    url(r'^listApparelInstance/$', views.listApparel, name = 'listApparel'),
+    url(r'^search/$', views.basic_search, name = 'search')
 )
 
