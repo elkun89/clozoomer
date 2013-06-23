@@ -7,10 +7,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template import Context, loader
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.template import RequestContext
 import json
 import sys
 import traceback
@@ -410,20 +411,22 @@ def process_friend_request(request):
 ##
 # function to carry out basic searching operation
 # @param request: the http request from the client
-
+@console_debug
+@csrf_protect
 def basic_search(request):
-    if request.method == 'GET':
-        form = SearchForm(request.GET)
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
         if form.is_valid():
             #grab data from the form
             text = form.cleaned_data['search']
             template = loader.get_template('list_apparel_search_result.html')
-            apparelType = ApparelType.objects.filter(name__icontains = text);
-            context = Context({
-                                                                                'apparelType' : apparelType,
+            apparelType = ApparelType.objects.filter(name__icontains = text)
+            context = RequestContext(request,
+                                     {
+                                        'apparelType' : apparelType,
             })
             return HttpResponse(template.render(context))               
-    return HttpResponseRedirect('/')
+    return HttpResponse('failed')
     
     
                 
