@@ -1,3 +1,4 @@
+
 html{
 height:100%;
 min-height:100%;
@@ -108,19 +109,33 @@ border-radius: 10px; /* future proofing */
 }
 
 #login_panel{
-   margin-left: 30%;
-   margin-right: 30%;
-   margin-top: 15%;
-   margin-bottom: 40%;
+   border: 3px solid;
+   background: #ebf5e1;
 }
 
 #signup_panel{
-   margin-left: 30%;
+   /*margin-left: 30%;
    margin-right: 30%;
    margin-top: 2%;
-   margin-bottom: 40%;
+   margin-bottom: 40%;*/
+   border: 3px solid;
 }
 
+#logo{
+	font: 80px arial, sans-serif;
+	color:#126267;
+	/*margin-left:15%;
+	margin-top:2.5%;
+	float:left;*/
+}
+
+#login_form{
+   /*margin-left:65%;*/
+}
+
+#login_pic{
+	border:3px solid;
+}
 
 #thumbnails{
 width:100%;
@@ -145,3 +160,4 @@ border-radius: 10px; /* future proofing */
 li{
 list-style-type:none;
 }
+
