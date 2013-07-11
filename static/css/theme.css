@@ -109,6 +109,7 @@ border-radius: 10px; /* future proofing */
 }
 
 #login_panel{
+   width:100%;
    border: 3px solid;
    background: #ebf5e1;
 }
