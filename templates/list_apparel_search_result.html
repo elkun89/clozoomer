@@ -1,0 +1,22 @@
+<div id = "main_board" >
+  <div class = "row">
+    <div id = "closet_display"class="large-12 columns">
+    {% for a in apparelType %}
+    <script>
+      $(document).ready(function() {
+        var counter = {{forloop.counter0}};
+        var pull_offset = counter%3;
+        $('#closet_display').append('<div class = "large-4 pull-' + pull_offset + ' small-6 columns">');
+      });
+    </script>
+      <div class="large-4 small-6 columns">
+        <div class="panel">
+          <img src = "/media/{{a.pictureLink}}" WIDTH="150" BORDER="1">
+          
+          <h5>{{a.name}}</h5>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
