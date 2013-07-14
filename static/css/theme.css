@@ -15,7 +15,6 @@ background-color:#ffffff;
 color:#000000;
 font-family:Verdana, Arial, Heletica, Tahoma, Sans-Serif;
 font-size:12px;
-
 }
 
 .button {
@@ -109,8 +108,6 @@ border-radius: 10px; /* future proofing */
 }
 
 #login_panel{
-   width:100%;
-   border: 3px solid;
    background: #ebf5e1;
 }
 
@@ -119,15 +116,12 @@ border-radius: 10px; /* future proofing */
    margin-right: 30%;
    margin-top: 2%;
    margin-bottom: 40%;*/
-   border: 3px solid;
 }
 
 #logo{
 	font: 80px arial, sans-serif;
-	color:#126267;
-	/*margin-left:15%;
-	margin-top:2.5%;
-	float:left;*/
+	color: #126267;
+	letter-spacing: 10px;
 }
 
 #login_form{
@@ -135,7 +129,25 @@ border-radius: 10px; /* future proofing */
 }
 
 #login_pic{
-	border:3px solid;
+}
+
+#login_button{
+	background: #ebf5e1;
+	color: #126267;
+	border:1px solid #bfc7b7;
+}
+
+.register{
+	color: #4d898d;
+}
+
+#reg_button{
+	background: #126267;
+	color: #ebf5e1;
+}
+
+.row {
+	min-width:100% !important; 
 }
 
 #thumbnails{
