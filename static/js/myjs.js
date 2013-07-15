@@ -21,7 +21,7 @@ function show_livefeed(){
   window.location.hash = '#' + hashVal;
 };
 
-function getTypeData(id){ 
+function getTypeData(id){
   var insert = "";
   var apparelData;
   $.ajax({
@@ -41,7 +41,7 @@ function getTypeData(id){
   return apparelData;
 };
 
-function getLocationName(id){ 
+function getLocationName(id){
   var insert = "";
   var locationName;
   $.ajax({
@@ -329,4 +329,3 @@ $(document).ready(function(){
     });
   });
 });
-

@@ -7,9 +7,9 @@
   <title>Clozoom</title>
 
   <link rel="stylesheet" href="{% static "css/normalize.css" %}"/>
-  <link rel="stylesheet" href="{% static "css/theme.css" %}" type="text/css" media="screen"/>
+  <link rel="stylesheet" href="{% static "css/theme.css" %}" />
   <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
-
+  
   <script src="{% static "js/jquery.js" %}"></script>
   <script src="{% static "js/highlight.js" %}"></script>
   <script src="{% static "js/vendor/custom.modernizr.js" %}"></script>
@@ -18,26 +18,85 @@
 
 
 <body>
-	<div id = "login_panel" class = "large-8 large-centered columns">
-		<div class = "panel">
-			<form id="login_form" method="post" action="{% url django.contrib.auth.views.login %}" class="box login">
-				 <td style="color:#CCCCCC"><b>{{ form.username.label_tag }}</b></td>
-					<td>{{ form.username }}</td>
-				 <td style="color:#CCCCCC"><b>{{ form.password.label_tag }}</b></td>
-					<td>{{ form.password }}</td>
-					{% if form.errors %}
-						<p class="errorlist">*Your username or password did not match.</p>
-					{% endif %}
-					{% csrf_token %}
-			  	<ul class="inline-list">
-			  		<li><input class = "small button" type="submit" value="Log In" tabindex="4"></li>
-				    <li><a href="/accounts/register"><font size="4">Register Now</font></a></li>
-					</ul>
-			</form>
-		</div>
-	</div>
-	<div class = "large-8 push-8 columns">
-	</div>
+	<img id == "banner" src="/static/images/banner.png">
+	<div class = "row" id = "login_panel">
+			<div id = "logo" class = "large-6 columns">
+				<div class = "row">
+					<div class = "large-1 columns">
+					</div>
+					<div class = "large-11 columns">
+						CLOZOOM
+					</div>
+				</div>
+			</div>
+			<div class = "large-6 columns">
+				<form id="login_form" method="post" action="{% url django.contrib.auth.views.login %}" class="box login">
+					<div class = "row">
+						<br />
+					</div>
+					<div class = "row">
+						<div id = "users" class = "large-5 columns">{{ form.username.label_tag }}</div>
+						<div class = "large-7 columns">{{ form.password.label_tag }}</div>
+					</div>
+					<div class = "row">
+						<div class = "large-5 columns">{{ form.username }}</div>
+						<div class = "large-5 columns">{{ form.password }}</div>
+						<div class = "large-2 columns">
+							<input id = "login_button" class = "small button" type="submit" value="Log In" tabindex="4">
+						</div>
 
+					</div>
+						{% if form.errors %}
+							<p class="errorlist">*Your username or password did not match.</p>
+						{% endif %}
+						{% csrf_token %}
+				</form>
+			</div>
+	</div>
+	<div class = "row">
+		<div class = "large-1 columns">
+			<br />
+		</div>
+		<div class = "large-5 columns">
+			<img id = "login_pic" src="/static/images/loginPic.png" height = "930" width = "465">
+		</div>
+		<div class = "large-6 columns" id = "signup_panel">
+				<div id = "signup_panel" class="large-8 large-centered columns">
+					<br />
+					<br />
+					<br />
+					<div class = "row">
+						<div class = "row">
+							<div class = "large-6 columns">
+								<div class = "register">First name:</div>
+								<div><input type="text" name="firstname"></div>
+							</div>
+							<div class = "large-6 columns">
+								<div class = "register">Last name:</div>
+								<div><input type="text" name="firstname"></div>
+							</div>
+						</div>
+						
+						<br />
+						
+						<div class = "register">Your e-mail:</div>
+						<div><input type="text" name="firstname"></div>
+						
+						<br />
+						
+						<div class = "register">Password:</div>
+						<div><input type="text" name="firstname"></div>
+						
+						<br />
+						
+						<div class = "register">Confirm password:</div>
+						<div><input type="text" name="firstname"></div>
+						<br />
+						
+						<div>
+							<input id = "reg_button" class = "small button" type="submit" value="Register">
+						</div>
+					</div>
+		</div>
 </body>
 </html>
