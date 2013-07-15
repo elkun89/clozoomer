@@ -321,6 +321,7 @@ $(document).ready(function(){
       data:form.serialize(),
       success:function(data){
         $("#main_board").html(data);
+        console.log(data);
       },
       error: function(data){
         $("#main_board").html('ajax request error');
