@@ -103,12 +103,18 @@ class Location(models.Model):
         return u"%s" % (self.address);
 
 
-#===============================================================================
-# Posts
-#===============================================================================
+##
+# Model to hold the information of posts created by the user
+# @param author: the author of the post 
+# @param content: The post's content
+# @param keywords: The keywords or tags associated with this post
+# @param mainPicture: The picture which the user wishes to post
+# @param userPictures: The pictures of the current user
+
 class Post(models.Model):
     author = models.ForeignKey(User)
     content = models.CharField(max_length = 500)
+    keywords = models.ManyToManyField('Keyword', blank = True)
     mainPicture = models.ImageField(upload_to = 'users', blank = True)
     userPictures = models.ImageField(upload_to = 'users', blank = True)
     def __unicode__ (self):
@@ -131,6 +137,17 @@ class FriendRequest(models.Model):
     
     def __unicode__ (self):
         return 'Request from ' + self.requester.username + ' to ' + self.requested_user.username
+
+##
+# Model to hold keywords used by posts for searching according to keywords
+# @param word: The word a keyword instance contains
+
+class Keyword(models.Model):
+    word = models.CharField(max_length = 20, unique = True)
+
+    def __unicode__ (self):
+        return '(' + self.word + ')'
+
 
 
 

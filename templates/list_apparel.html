@@ -3,9 +3,9 @@
 	{% for a in usrApparel %}
 	<script>
 		$(document).ready(function() {
-	  	var counter = {{forloop.counter0}};
-		  var pull_offset = counter%3;
-		  $('#closet_display').append('<div class = "large-4 pull-' + pull_offset + ' small-6 columns">');
+	  		var counter = {{forloop.counter0}};
+		  	var pull_offset = counter%3;
+		  	$('#closet_display').append('<div class = "large-4 pull-' + pull_offset + ' small-6 columns">');
 		});
 	</script>
 		<div class="large-4 small-6 columns">
@@ -16,10 +16,10 @@
 	      <h6 class="subheader">Added on: {{a.timeOfCreation}}</h6>
 	      <ul class="inline-list">
 	      	{% if not a.is_shared %}
-			<li><a href="/shareInstance/{{a.id}}/">share</a></li>
+				<li><a href="/shareInstance/{{a.id}}/">share</a></li>
 			{% endif %}
 			{% if a.is_shared %}
-			<li><a href="/shareInstance/{{a.id}}/">unshare</a></li>
+				<li><a href="/shareInstance/{{a.id}}/">unshare</a></li>
 	      	{% endif %}
 			<li><a href="/deleteApparelInstance/{{a.id}}/">delete</a></li>
 		  </ul>

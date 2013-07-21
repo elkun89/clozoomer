@@ -22,7 +22,7 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('price', self.gf('django.db.models.fields.FloatField')()),
             ('attribute', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('pictureLink', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('pictureLink', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
             ('brand', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['myCloset.Brand'])),
         ))
         db.send_create_signal('myCloset', ['ApparelType'])
@@ -32,8 +32,8 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['myCloset.ApparelType'])),
             ('timeOfCreation', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('locationOfPurchase', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['myCloset.Location'])),
             ('owner', self.gf('django.db.models.fields.related.ForeignKey')(related_name='apparels', to=orm['auth.User'])),
+            ('is_shared', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('myCloset', ['ApparelInstance'])
 
@@ -71,10 +71,10 @@ class Migration(SchemaMigration):
         db.create_table('myCloset_userprofile', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], unique=True)),
-            ('username', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('username', self.gf('django.db.models.fields.CharField')(unique=True, max_length=200)),
             ('first_name', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('last_name', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=200, blank=True)),
+            ('email', self.gf('django.db.models.fields.EmailField')(max_length=200)),
             ('gender', self.gf('django.db.models.fields.CharField')(max_length=2)),
             ('profilePictureLink', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
         ))
@@ -106,12 +106,39 @@ class Migration(SchemaMigration):
         # Adding model 'Post'
         db.create_table('myCloset_post', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('author', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], unique=True)),
+            ('author', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('content', self.gf('django.db.models.fields.CharField')(max_length=500)),
             ('mainPicture', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
             ('userPictures', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
         ))
         db.send_create_signal('myCloset', ['Post'])
+
+        # Adding M2M table for field keywords on 'Post'
+        db.create_table('myCloset_post_keywords', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('post', models.ForeignKey(orm['myCloset.post'], null=False)),
+            ('keyword', models.ForeignKey(orm['myCloset.keyword'], null=False))
+        ))
+        db.create_unique('myCloset_post_keywords', ['post_id', 'keyword_id'])
+
+        # Adding model 'FriendRequest'
+        db.create_table('myCloset_friendrequest', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('message', self.gf('django.db.models.fields.CharField')(max_length=500)),
+            ('timeOfCreation', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('requester', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['myCloset.UserProfile'])),
+            ('requested_user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='user_requested', to=orm['myCloset.UserProfile'])),
+            ('response', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('processed', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal('myCloset', ['FriendRequest'])
+
+        # Adding model 'Keyword'
+        db.create_table('myCloset_keyword', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('word', self.gf('django.db.models.fields.CharField')(unique=True, max_length=20)),
+        ))
+        db.send_create_signal('myCloset', ['Keyword'])
 
 
     def backwards(self, orm):
@@ -150,6 +177,15 @@ class Migration(SchemaMigration):
 
         # Deleting model 'Post'
         db.delete_table('myCloset_post')
+
+        # Removing M2M table for field keywords on 'Post'
+        db.delete_table('myCloset_post_keywords')
+
+        # Deleting model 'FriendRequest'
+        db.delete_table('myCloset_friendrequest')
+
+        # Deleting model 'Keyword'
+        db.delete_table('myCloset_keyword')
 
 
     models = {
@@ -193,7 +229,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'ApparelInstance'},
             'categories': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['myCloset.Category']", 'symmetrical': 'False', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'locationOfPurchase': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['myCloset.Location']"}),
+            'is_shared': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'apparels'", 'to': "orm['auth.User']"}),
             'timeOfCreation': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['myCloset.ApparelType']"})
@@ -205,7 +241,7 @@ class Migration(SchemaMigration):
             'brand': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['myCloset.Brand']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'pictureLink': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'pictureLink': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'price': ('django.db.models.fields.FloatField', [], {})
         },
         'myCloset.brand': {
@@ -225,6 +261,21 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'ClothType', '_ormbases': ['myCloset.ApparelType']},
             'appareltype_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['myCloset.ApparelType']", 'unique': 'True', 'primary_key': 'True'})
         },
+        'myCloset.friendrequest': {
+            'Meta': {'object_name': 'FriendRequest'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'message': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'processed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'requested_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user_requested'", 'to': "orm['myCloset.UserProfile']"}),
+            'requester': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['myCloset.UserProfile']"}),
+            'response': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'timeOfCreation': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'})
+        },
+        'myCloset.keyword': {
+            'Meta': {'object_name': 'Keyword'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'word': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '20'})
+        },
         'myCloset.location': {
             'Meta': {'object_name': 'Location'},
             'address': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
@@ -232,9 +283,10 @@ class Migration(SchemaMigration):
         },
         'myCloset.post': {
             'Meta': {'object_name': 'Post'},
-            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'unique': 'True'}),
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'content': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'keywords': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['myCloset.Keyword']", 'symmetrical': 'False', 'blank': 'True'}),
             'mainPicture': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'userPictures': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'})
         },
@@ -244,7 +296,7 @@ class Migration(SchemaMigration):
         },
         'myCloset.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '200', 'blank': 'True'}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '200'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'friends': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['myCloset.UserProfile']", 'symmetrical': 'False', 'blank': 'True'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
@@ -253,7 +305,7 @@ class Migration(SchemaMigration):
             'posts': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['myCloset.Post']", 'symmetrical': 'False', 'blank': 'True'}),
             'profilePictureLink': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'unique': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'max_length': '200'})
+            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '200'})
         }
     }
 

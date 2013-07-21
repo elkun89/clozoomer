@@ -39,13 +39,12 @@ class ProfileForm(ModelForm):
     def __init__(self, user, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)      
 
-
-
 # form used for adding a new post        
 class PostForm(ModelForm):
+    keywords = forms.CharField(max_length = 50)
     class Meta:
         model = Post
-        fields = ('content', 'mainPicture', 'userPictures')
+        fields = ('content', 'mainPicture', 'userPictures', 'keywords')
         widgets = {
                    'content' : forms.Textarea,
                    }

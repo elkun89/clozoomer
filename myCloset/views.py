@@ -253,15 +253,33 @@ def showPosts(request):
 # function to create posts
 # @param request: the http request sent by the user
 
-@login_required
 def createPost(request):
     if request.method == 'POST':                                    #process the information if the request is post
         form = PostForm(request.user, request.POST, request.FILES)
+        form.fields['keywords'].required = False
         if form.is_valid():
-            newPost = form.save(commit = False)
-            newPost.author = request.user
+            newPost = Post( author = request.user, 
+                            content = form.cleaned_data['content'],
+                            mainPicture = form.cleaned_data['mainPicture'],
+                            userPictures = form.cleaned_data['userPictures']
+                            )
             newPost.save()
-        return HttpResponseRedirect('/#show_livefeed')
+            keywords_string = form.cleaned_data['keywords']
+            keywords = keywords_string.split(',')
+            for keyword in keywords:
+                keyword = keyword.strip(' ')
+                if keyword:
+                    keyword = keyword.lower()
+                    #if the keyword already exists in the db, add it to the post object
+                    try:
+                        word = Keyword.objects.get(word = keyword)
+                        newPost.keywords.add(word)
+                    except:
+                        newKeyword = Keyword(word = keyword)
+                        newKeyword.save()
+                        newPost.keywords.add(newKeyword)
+            newPost.save()
+            return HttpResponseRedirect('/#show_livefeed')
     else:
         form = PostForm(request.user)
         url = '/newPost/'
